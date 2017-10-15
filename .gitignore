@@ -1,0 +1,47 @@
+# Compiled
+*.elc
+
+# Packaging
+.cask
+.emacs.d/*
+
+# midsaves
+*.*\~
+*\~
+.#*
+.swp
+.*.swp
+*\#*\#
+
+
+# for the fact that ~/.emacs.d/ might be used
+## emacs and common stuff
+.cache/*
+elpa/*
+games/
+history
+network-security.data
+places
+projectile-bookmarks.eld
+projectile*
+recentf
+snippets/*
+newsticker/*
+
+## other packages
+ac-comphist.dat
+company-statistics-cache.el
+emms/*
+semanticdb/*
+.mc-lists.el
+haskell-fun/*
+
+## peoples emacs
+peoplesEmacs/*.el
+!peoplesEmacs/peoples-theme.el
+peoplesEmacs/themeshort
+
+## personal
+.projetile
+diary
+personal/*
