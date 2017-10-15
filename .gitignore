@@ -27,6 +27,7 @@ projectile*
 recentf
 snippets/*
 newsticker/*
+tramp
 
 ## other packages
 ac-comphist.dat
