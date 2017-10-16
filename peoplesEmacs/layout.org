@@ -1,0 +1,238 @@
+#+TITLE Peoples Emacs layout
+
+* Lines and bars
+** line highlight
+   #+BEGIN_SRC emacs-lisp :results silent
+     (global-hl-line-mode t)
+     ;(set-face-background 'hl-line "#404040")
+   #+END_SRC
+
+
+** cursor
+   #+BEGIN_SRC emacs-lisp :results silent
+     (setq blink-cursor-interval 0.07)
+     (setq blink-cursor-blinks 0)
+     (set-face-background 'cursor "#ff5500")
+     (setq blink-cursor-delay 0)
+   #+END_SRC
+
+
+** diminish
+   #+BEGIN_SRC emacs-lisp :results silent
+     (use-package diminish
+       :ensure t
+       :diminish ""
+       :config
+       (add-hook 'after-init-hook '(lambda ()
+				     (diminish 'auto-fill-function "")
+				     (diminish 'yas-minor-mode "")
+				     (diminish 'rainbow-mode "")
+				     (diminish 'eldoc-mode "")
+				     (diminish 'latex-preview-pane-mode "")
+				     (diminish 'semantic-mode "")
+				     (diminish 'flycheck-mode "")
+				     (diminish 'flyspell-mode "")
+				     (diminish 'hs-minor-mode ""))))
+     (add-hook 'after-init-hook #'(lambda ()(defcustom projectile-mode-line
+					     '(:eval (format "P[%s]" (projectile-project-name)))
+					     ""
+					     :group 'projectile)))
+   #+END_SRC
+
+   
+** linum-rel
+   #+BEGIN_SRC emacs-lisp :results silent
+     ;; comparable to vim with number and relativenumber
+     (use-package linum-relative
+       :ensure t
+       :diminish ""
+       :config (setq-default linum-relative-current-symbol ""))
+     (add-hook 'prog-mode-hook 'linum-relative-mode)
+     (add-hook 'text-mode-hook 'linum-relative-mode)
+     (add-hook 'org-mode-hook 'linum-relative-mode)
+   #+END_SRC
+
+
+** fill delimiter
+   #+BEGIN_SRC emacs-lisp :results silent
+     ;; ##  fill-column-inidicator  #########################################
+     (use-package fill-column-indicator
+       :diminish ""
+       :ensure t)
+     (add-hook 'prog-mode-hook 'fci-mode)
+     (add-hook 'mail-mode-hook 'fci-mode)
+     (add-hook 'text-mode-hook 'fci-mode)
+   #+END_SRC
+
+
+** Whitespace, the trailing one
+   #+BEGIN_SRC emacs-lisp :results silent
+     (use-package whitespace
+       :diminish ""
+       :ensure t
+       :config
+         (custom-set-variables
+            '(whitespace-style
+                '(face trailing tabs))))
+     (add-hook 'text-mode-hook 'whitespace-mode)
+     (add-hook 'prog-mode-hook 'whitespace-mode)
+   #+END_SRC
+
+
+** highlight symbol
+   #+BEGIN_SRC emacs-lisp :results silent
+     (use-package highlight-symbol
+       :ensure t
+       :diminish ""
+       :config
+         (add-hook 'prog-mode-hook 'highlight-symbol-mode)
+         (setq highlight-symbol-idle-delay 0.5))
+   #+END_SRC
+
+
+** beacon
+   #+BEGIN_SRC emacs-lisp :results silent
+     (use-package beacon
+       :ensure t
+       :diminish ""
+       :config
+         (beacon-mode t)
+         (customize-set-value 'beacon-color "#00ff00"))
+   #+END_SRC
+
+
+** truncating and wrapping
+   #+begin_src emacs-lisp :results silent
+     (setq truncate-partial-width-windows nil)
+     (setq word-wrap t)
+     (size-indication-mode t)
+
+   #+end_sr
+
+* Modeline/Minibuffer
+  #+Begin_SRC emacs-lisp :results silent
+    (column-number-mode t)
+    (size-indication-mode t)
+    (line-number-mode -1)
+  #+END_SRC
+
+
+** which-key
+   #+BEGIN_SRC emacs-lisp :results silent
+     ;; which-key # shows the following possible key strokes and what they do
+     (use-package which-key
+       :diminish ""
+       :ensure t
+       ;; :init (which-key-mode t)
+       :config
+         (which-key-setup-minibuffer)
+         (setq which-key-idle-delay 0.2)
+         (setq which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
+         (add-hook 'after-init-hook (
+              lambda ()
+                    ;; this is a work around because which key wasn't showing 
+                    (which-key-mode -1)
+                    (which-key-mode t))))
+   #+END_SRC
+
+
+* Dir And Directory Things
+** ranger
+   #+BEGIN_SRC emacs-lisp :results silent
+     (use-package ranger
+      :ensure t
+      :bind ("C-x C-f" . ranger))
+   #+END_SRC
+   
+** 'normal' dir-mode
+   #+BEGIN_SRC emacs-lisp :results silent
+     (global-set-key (kbd "C-x M-f") 'helm-find-files)
+   #+END_SRC
+
+
+* Window/Buffer management
+
+
+* VC
+** diff highlight
+   #+BEGIN_SRC emacs-lisp :results silent
+     (use-package diff-hl
+       :diminish ""
+       :ensure t
+       :bind ("C-x g" . vc-diff) ; I know, vc-diff is not part of diff-hl,
+       :config
+       (add-hook 'prog-mode-hook 'diff-hl-mode)
+       (add-hook 'org-mode-hook 'diff-hl-mode)
+       (add-hook 'text-mode-hook 'diff-hl-mode)
+					     ; but it fits here as long magit is not
+					     ; used yet
+					     ; :config ((add-hook 'magit-post-refresh-hook
+					     ; 'diff-hl-magit-post-refresh))
+       )
+   #+END_SRC
+
+
+* Startup Screen
+** Dashboard
+   #+BEGIN_SRC emacs-lisp :results silent
+     (use-package dashboard
+       :ensure t
+       :config
+       (dashboard-setup-startup-hook)
+       (setq dashboard-banner-logo-title "")
+       (setq dashboard-startup-banner nil)
+       (setq dashboard-items '((agenda . 25)
+			       (projects .7)
+			       (bookmarks .12)
+			       (recents . 20))))
+       (add-to-list 'dashboard-items '(agenda) t)
+    #+END_SRC
+
+
+* Colors
+** paren
+   #+BEGIN_SRC emacs-lisp :results silent
+     (use-package paren
+       :diminish ""
+       :ensure t
+       :init (show-paren-mode 1)
+       :config
+	 (setq-default show-paern-delay nil)
+	 (set-face-background 'show-paren-match "yellow")
+	 (set-face-foreground 'show-paren-match "purple")
+	 ;(set-face-attribute 'show-paren-match-face :weight 'extra-bold)
+     )
+   #+END_SRC
+
+** rainbow mode
+   #+BEGIN_SRC emacs-lisp :results silent
+     (use-package rainbow-mode
+       :diminish ""
+       :ensure t
+       :config
+         (add-hook 'text-mode-hook 'rainbow-mode)
+         (add-hook 'prog-mode-hook 'rainbow-mode)
+         ;(add-hook 'special-mode-hook 'rainbow-mode)
+         )
+   #+END_SRC
+
+
+** rainbow delimiters
+   #+BEGIN_SRC emacs-lisp
+     (use-package rainbow-delimiters
+       :diminish ""
+       :ensure t
+       ;:init (add-hook 'after-init-hook 'rainbow-delimiters-mode)
+       :config
+         (custom-set-faces
+          '(rainbow-delimiters-depth-1-face ((t (:foreground "blue" :height 1.0))))
+          '(rainbow-delimiters-depth-2-face ((t (:foreground "green" :height 1.0))))
+          '(rainbow-delimiters-depth-3-face ((t (:foreground "yellow" :height 1.0))))
+          '(rainbow-delimiters-depth-4-face ((t (:foreground "violet" :height 1.0))))
+          '(rainbow-delimiters-depth-5-face ((t (:foreground "red"))))
+          '(rainbow-delimiters-depth-6-face ((t (:foreground "orange"))))
+          '(rainbow-delimiters-depth-7-face ((t (:foreground "cyan"))))
+          '(rainbow-delimiters-depth-8-face ((t (:foreground "black" :height 1.0))))
+          '(rainbow-delimiters-mismatch-face ((t (:foreground "red" :height 1.0))))
+          '(rainbow-delimiters-unmatched-face ((t (:foreground "red" :height 1.0))))))
+   #+END_SRC
