@@ -4,7 +4,7 @@
 (package-initialize)
 
 (add-to-list 'load-path "~/progBin/org-mode/lisp")
-(add-to-list 'load-path "~/progBin/org-mode/contrib/lisp" t)
+(add-to-list 'load-path "~/progBin/org-mode/contrib/lisp")
 ;;  we want a couple of sane defaults
 (org-babel-load-file "~/.emacs.d/peoplesEmacs/sanity.org")
 
@@ -28,13 +28,18 @@
 
 ;; set font
 (add-to-list 'default-frame-alist
-             '(font . "Fira Mono-11"))
+             '(font . "Fira Mono-10"))
 
 ;; get a theme
 (use-package dracula-theme
   :ensure t
   :config (load-theme 'dracula t)
   (set-background-color "black"))
+
+;; notmuch configuration
+(use-package notmuch
+  :ensure t
+  :config (org-babel-load-file "~/.emacs.d/private/notmuch.org"))
 
 (provide 'init)
 ;;; init.el ends here
