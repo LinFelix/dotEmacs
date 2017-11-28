@@ -156,6 +156,9 @@
 
 
 * Window/Buffer management
+  #+begin_src emacs-lisp :results silent
+    (global-set-key (kbd "M-s-j") 'other-window)
+  #+end_src
 
 
 * VC
