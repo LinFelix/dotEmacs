@@ -39,7 +39,7 @@
 					     :group 'projectile)))
    #+END_SRC
 
-   
+
 ** linum-rel
    #+BEGIN_SRC emacs-lisp :results silent
      ;; comparable to vim with number and relativenumber
@@ -107,7 +107,7 @@
      (setq word-wrap t)
      (size-indication-mode t)
 
-   #+end_sr
+   #+end_src
 
 * Modeline/Minibuffer
   #+Begin_SRC emacs-lisp :results silent
@@ -125,14 +125,19 @@
        :ensure t
        ;; :init (which-key-mode t)
        :config
-         (which-key-setup-minibuffer)
-         (setq which-key-idle-delay 0.2)
-         (setq which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
-         (add-hook 'after-init-hook (
-              lambda ()
-                    ;; this is a work around because which key wasn't showing 
-                    (which-key-mode -1)
-                    (which-key-mode t))))
+       (which-key-setup-minibuffer)
+       (setq which-key-idle-delay 0.2)
+       (setq which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
+       (add-hook 'after-init-hook (
+				   lambda ()
+				   ;; this is a work around because which
+				   ;; key wasn't showing
+				   ;; »Did you try turning it of on again
+				   (which-key-mode -1)
+				   (which-key-mode t)))
+       (setq which-key-paging-prefixes '("C-x"))
+       (setq which-key-paging-prefixes '("C-c"))
+       (setq which-key-paging-key "M-ß"))
    #+END_SRC
 
 
