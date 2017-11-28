@@ -172,6 +172,7 @@
        (add-hook 'prog-mode-hook 'diff-hl-mode)
        (add-hook 'org-mode-hook 'diff-hl-mode)
        (add-hook 'text-mode-hook 'diff-hl-mode)
+       (add-hook 'fundamental-mode-hook 'diff-hl-mode)
 					     ; but it fits here as long magit is not
 					     ; used yet
 					     ; :config ((add-hook 'magit-post-refresh-hook
