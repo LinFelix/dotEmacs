@@ -47,3 +47,8 @@ peoplesEmacs/themeshort
 diary
 personal/*
 private/*
+
+## package configurations and logs
+.trello/*
+.python-environments/*
+request/*
