@@ -39,6 +39,10 @@
 
 * TEX
    #+BEGIN_SRC emacs-lisp :results silent
+     (use-package latex-preview-pane
+       :ensure t)
+     (use-package latex-math-preview
+       :ensure t)
      (use-package tex
        :ensure auctex
        :mode ("\\.tex\\'" . TeX-mode)

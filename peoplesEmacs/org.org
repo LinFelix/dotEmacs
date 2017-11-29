@@ -6,12 +6,16 @@
 
 * calf
   #+begin_src emacs-lisp :results silent
-    (use-package calfw-org
-      :ensure t)
-    (use-package calfw-cal
-      :ensure t)
+    ;; (use-package calfw-org
+    ;;   :ensure t)
+    ;; (use-package calfw-cal
+    ;; :ensure t)
     (use-package calfw
       :ensure t
+      :init ((use-package calfw-org
+	       :ensure t)
+	     (use-package calfw-cal
+	       :ensure t))
       :config
       (require 'calfw-org)
       (require 'calfw-cal))
