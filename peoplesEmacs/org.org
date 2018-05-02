@@ -12,10 +12,10 @@
     ;; :ensure t)
     (use-package calfw
       :ensure t
-      :init ((use-package calfw-org
-	       :ensure t)
-	     (use-package calfw-cal
-	       :ensure t))
+      ;; :init ((use-package calfw-org
+      ;; 	   :ensure t)
+      ;; 	 (use-package calfw-cal
+      ;; 	   :ensure t))
       :config
       (require 'calfw-org)
       (require 'calfw-cal))
@@ -33,6 +33,8 @@
 
 * Org-mode
   #+begin_src emacs-lisp :results silent
+    (add-hook 'org-mode-hook '(set-fill-column 120))
+    (add-hook 'org-mode-hook '(auto-fill-mode t))
     (push 'company-capf company-backends)
     (defun my-org-mode-hook ()
       (add-hook 'completion-at-point-functions 'pcomplete-completions-at-point nil t))

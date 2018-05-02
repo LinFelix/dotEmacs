@@ -55,12 +55,220 @@
        (setq-default TeX-electric-sub-and-superscript t)
        (setq-default LaTeX-electric-left-right-brace t)
 
-       (setq fill-column 120)
-       (auto-fill-mode t)
-       (autopair-mode -1)
-
+       (add-hook 'LaTeX-mode-hook '(lambda ()
+				     (setq fill-column 120)
+				     (auto-fill-mode t)
+				     (autopair-mode -1)))
 					     ;(add-hook 'TeX-mode-hook #'tex-hook-func)
        )
+
+
+     ;; (use-package tex
+     ;;   :ensure auctex)
+
+     ;; (require 'latex)
+     ;; (require 'tex-buf)
+     ;; (require 'reftex)
+
+
+     ;; Basic configuration
+
+     ;(TeX-engine-set 'default)
+
+     ;; (setq-default TeX-auto-save t
+     ;; 	      TeX-save-query nil
+     ;; 	      TeX-parse-self t
+     ;; 	      TeX-master t
+     ;; 	      TeX-electric-sub-and-superscript t
+     ;; 	      TeX-electric-math '("$" . "$")
+     ;; 	      TeX-electric-escape nil
+     ;; 	      LaTeX-electric-left-right-brace t
+     ;; 	      LaTeX-fill-break-at-separators nil)
+
+     (add-hook 'LaTeX-mode-hook #'turn-on-flyspell)
+     (add-hook 'LaTeX-mode-hook #'turn-on-visual-line-mode)
+     (add-hook 'LaTeX-mode-hook #'LaTeX-math-mode)
+     (add-hook 'LaTeX-mode-hook #'outline-minor-mode)
+     (add-hook 'LaTeX-mode-hook #'page-break-lines-mode)
+     ;; (add-hook 'LaTeX-mode-hook #'turn-on-reftex)
+
+     ;; (put 'TeX-narrow-to-group 'disabled nil)
+     ;; (put 'LaTeX-narrow-to-environment 'disabled nil)
+
+     ;; (setq TeX-fold-math-spec-list '(("≤" ("le"))
+     ;; 				("≥" ("ge"))
+     ;; 				("∉" ("notin"))))
+
+     (setq TeX-source-correlate-start-server nil)
+
+     ;; (setq LaTeX-eqnarray-label "eqn:"
+     ;;       LaTeX-equation-label "eqn:"
+     ;;       LaTeX-figure-label "fig:"
+     ;;       LaTeX-table-label "tab:"
+     ;;       TeX-newline-function 'reindent-then-newline-and-indent
+     ;;       LaTeX-section-hook '(LaTeX-section-heading
+     ;; 			   LaTeX-section-title
+     ;; 			   LaTeX-section-section
+     ;; 			   LaTeX-section-label))
+
+     (add-hook 'LaTeX-mode-hook '(lambda ()
+				   (TeX-PDF-mode 1)
+				   (TeX-source-correlate-mode 1)
+				   (TeX-fold-mode 1)))
+
+     ;;
+     ;; ;; PDF Viewer
+
+     ;; (add-to-list 'TeX-view-program-selection
+     ;; 	     '(output-pdf "Evince"))
+
+     ;; use pdf-tools when loaded
+     (eval-after-load 'pdf-tools
+       `(progn
+	  (add-to-list 'TeX-view-program-selection '(output-pdf "PDF Tools"))
+	  (add-to-list 'TeX-after-compilation-finished-functions
+		       #'TeX-revert-document-buffer)))
+
+
+     ;;
+     ;; ;; Printer
+
+     ;; (add-to-list 'TeX-printer-list '("Remote" "lp-remote %o" "ssh lat lpstat -o"))
+     ;; (setq TeX-printer-default "Remote")
+
+     ;;
+     ;; ;; Custom style
+
+
+     ;; (TeX-add-style-hook
+     ;;  "mydefs"
+     ;;  (lambda ()
+     ;;    (TeX-run-style-hooks "etex"
+     ;; 			"etoolbox"
+     ;; 			"ifthen"
+     ;; 			"amsmath"
+     ;; 			"amssymb"
+     ;; 			"latexsym"
+     ;; 			"mathabx"
+     ;; 			"stmaryrd"
+     ;; 			"verbatim"
+     ;; 			"graphicx"
+     ;; 			"enumerate"
+     ;; 			"array"
+     ;; 			"booktabs"
+     ;; 			"ulem"
+     ;; 			"nicefrac"
+     ;; 			"listings"
+     ;; 			"microtype"
+     ;; 			"tabularx"
+     ;; 			"tikz"
+     ;; 			"csquotes"
+     ;; 			"ntheorem"
+     ;; 			"xspace")
+     ;;    (LaTeX-add-environments
+     ;;     '("Exercise" LaTeX-env-label)
+     ;;     '("Theorem" LaTeX-env-label)
+     ;;     '("Proposition" LaTeX-env-label)
+     ;;     '("Lemma" LaTeX-env-label)
+     ;;     '("Corollary" LaTeX-env-label)
+     ;;     '("Remark" LaTeX-env-label)
+     ;;     '("Example" LaTeX-env-label)
+     ;;     '("Definition" LaTeX-env-label)
+     ;;     '("Proof" LaTeX-env-label))
+
+     ;;    ;; https://tex.stackexchange.com/questions/217799/auctex-11-88-bug-on-latex-env-label-cannot-automatically-insert-label
+     ;;    (setf (cadr reftex-insert-label-flags)
+     ;; 	 (concat (cadr reftex-insert-label-flags) "TLPDRCE"))
+
+     ;;    (dolist (label-spec '(("Theorem"      ?T "thm:"  "~\\ref{%s}" t ("Theorem" "Thm.") nil)
+     ;; 			 ("Lemma"        ?L "lem:"  "~\\ref{%s}" t ("Lemma" "Lem.") nil)
+     ;; 			 ("Proposition"  ?P "prop:" "~\\ref{%s}" t ("Proposition" "Prop.") nil)
+     ;; 			 ("Satz"         ?T "thm:"  "~\\ref{%s}" t ("Satz") nil)
+     ;; 			 ("Definition"   ?D "def:"  "~\\ref{%s}" t ("Definition" "Def.") nil)
+     ;; 			 ("Remark"       ?R "rem:"  "~\\ref{%s}" t ("Remark" "Rem.") nil)
+     ;; 			 ("Corollary"    ?C "cor:"  "~\\ref{%s}" t ("Corollary" "Cor.") nil)
+     ;; 			 ("Example"      ?E "expl:" "~\\ref{%s}" t ("Example") nil)))
+     ;;      (add-to-list 'reftex-label-alist label-spec)
+     ;;      (add-to-list 'LaTeX-label-alist (cons (nth 0 label-spec)
+     ;; 					   (nth 2 label-spec))))))
+
+     ;;
+     ;; ;; More style definitions
+
+     ;; (TeX-add-style-hook
+     ;;  "cleveref"
+     ;;  (lambda ()
+     ;;    (add-to-list 'reftex-ref-style-alist
+     ;; 		'("Cleveref" "cleveref"
+     ;; 		  (("\\cref" ?c) ("\\Cref" ?C)
+     ;; 		   ("\\cpageref" ?d) ("\\Cpageref" ?D))))
+     ;;    (reftex-ref-style-activate "Cleveref")
+     ;;    (TeX-add-symbols
+     ;;     '("cref" TeX-arg-ref)
+     ;;     '("Cref" TeX-arg-ref)
+     ;;     '("cpageref" TeX-arg-ref)
+     ;;     '("Cpageref" TeX-arg-ref))))
+
+     ;;
+     ;; ;; Language specification
+
+     ;; (add-hook 'TeX-language-de-hook
+     ;; 	  (lambda () (ispell-change-dictionary "de_DE")))
+
+     ;; (add-hook 'TeX-language-en-hook
+     ;; 	  (lambda () (ispell-change-dictionary "en_US")))
+
+     ;;
+     ;; ;; LaTeXMk
+
+     ;; (when (require 'auctex-latexmk nil 'no-error)
+     ;;   (auctex-latexmk-setup)
+     ;;   (setq auctex-latexmk-inherit-TeX-PDF-mode t))
+
+     ;;
+     ;; ;; End
+
+     ;; (provide 'db-latex)
+
+     ;;; db-latex ends here
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;j
+					     ; even more latex
+
+     (require 'dbus)
+
+     (defun un-urlify (fname-or-url)
+       "A trivial function that replaces a prefix of file:/// with just /."
+       (if (string= (substring fname-or-url 0 8) "file:///")
+	   (substring fname-or-url 7)
+	 fname-or-url))
+
+     (defun th-evince-sync (file linecol &rest ignored)
+       (let* ((fname (un-urlify file))
+	      (buf (find-buffer-visiting fname))
+	      (line (car linecol))
+	      (col (cadr linecol)))
+	 (if (null buf)
+	     (message "[Synctex]: %s is not opened..." fname)
+	   (switch-to-buffer buf)
+	   (goto-line (car linecol))
+	   (unless (= col -1)
+	     (move-to-column col)))))
+
+     (defvar *dbus-evince-signal* nil)
+
+     (defun enable-evince-sync ()
+       (require 'dbus)
+       (when (and
+	      (eq window-system 'x)
+	      (fboundp 'dbus-register-signal))
+	 (unless *dbus-evince-signal*
+	   (setf *dbus-evince-signal*
+		 (dbus-register-signal
+		  :session nil "/org/gnome/evince/Window/0"
+		  "org.gnome.evince.Window" "SyncSource"
+		  'th-evince-sync)))))
+
+     (add-hook 'LaTeX-mode-hook 'enable-evince-sync)
    #+END_SRC
 
 
@@ -77,100 +285,113 @@
     #+END_SRC
 
 *** NOT-IELM
-    #+BEGIN_SRC emacs-lisp
-      (defun emacs-lisp-hook-func ()
-	"Function for the emacs-lisp."
-	(eldoc-mode t)
-	(company-mode t)
-	(paredit-mode t)
-	(auto-compile-mode )
-	(global-set-key (kbd "<f10>") 'edebug-set-breakpoint))
-      (add-hook 'emacs-lisp-mode-hook #'emacs-lisp-hook-func)
+    #+BEGIN_SRC emacs-lisp :results silent
+      ;; (defun emacs-lisp-hook-func ()
+      ;;   "Function for the emacs-lisp."
+      ;;   (eldoc-mode t)
+      ;;   (company-mode t)
+      ;;   (paredit-mode t)
+      ;;   (auto-compile-mode t)
+      ;;   (global-set-key (kbd "<f10>") 'edebug-set-breakpoint))
+      ;; (add-hook 'emacs-lisp-mode-hook #'emacs-lisp-hook-func)
+
+      (use-package elisp-mode
+	:defer t
+	:config (progn (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
+		       (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
+		       (add-hook 'emacs-lisp-mode-hook #'auto-compile-mode)
+		       (add-hook 'emacs-lisp-mode-hook #'company-mode))
+					      ;:bind ("<f10>" . #'edebug-set-breakpoint))
+	)
     #+END_SRC
 
 
 * BABEL
-  #+BEGIN_SRC emacs-lips
+  #+BEGIN_SRC emacs-lisp :results silent
     (org-babel-do-load-languages
-      'org-babel-load-languages
-      '((maxima . t)
-        (octave . t)
-        (python . t)
-        (haskell . t)))
+     'org-babel-load-languages
+     '((maxima . t)
+       (octave . t)
+       (python . t)
+       (haskell . t)
+       (shell . t)
+       (fortran . t)
+       (js . t)
+       (java . t)
+       (scala . t)))
   #+END_SRC
-
 
 * Python
   #+begin_src emacs-lisp
-    (use-package ob-python
-      :ensure t)
-    (use-package elpy
-      :ensure t
-      :diminish ""
-      :config
-					    ;(add-hook 'python-mode-hook 'elpy-mode)
-      )
-    (use-package py-autopep8
-      :ensure t
-      :diminish ""
-      :config
-					    ;(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
-      )
-					    ;(use-package ein
-					    ;  :enable t
-					    ; diminish "")
+	;; (use-package ob-python
+	;;   :ensure t)
+	(use-package elpy
+	  :ensure t
+	  :diminish ""
+	  :config
+						;(add-hook 'python-mode-hook 'elpy-mode)
+	  )
+	(use-package py-autopep8
+	  :ensure t
+	  :diminish ""
+	  :config
+						;(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+	  )
+						;(use-package ein
+						;  :enable t
+						; diminish "")
 
 
 
-					    ;(elpy-enable)
-					    ;(elpy-use-ipython)
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-					    ; python-mode
-					    ;(setq py-install-directory "~/.emacs.d/python-mode-6.0.11")
-					    ;(add-to-list 'load-path py-install-directory)
-					    ;(require 'python-mode)
+						;(elpy-enable)
+						;(elpy-use-ipython)
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+						; python-mode
+						;(setq py-install-directory "~/.emacs.d/python-mode-6.0.11")
+						;(add-to-list 'load-path py-install-directory)
+						;(require 'python-mode)
 
-    (use-package ob-ipython
-      :ensure t)
-					    ; use IPython
-					    ;(setq-default py-shell-name "ipython")
-					    ;(setq-default py-which-bufname "IPython")
-					    ; use the wx backend, for both mayavi and matplotlib
-					    ;(setq py-python-command-args
-					    ; '("--gui=wx" "--pylab=wx" "-colors" "Linux"))
-					    ;(setq py-force-py-shell-name-p t)
+    ;    (use-package ob-ipython
+    ;      :ensure t)
+						; use IPython
+						;(setq-default py-shell-name "ipython")
+						;(setq-default py-which-bufname "IPython")
+						; use the wx backend, for both mayavi and matplotlib
+						;(setq py-python-command-args
+						; '("--gui=wx" "--pylab=wx" "-colors" "Linux"))
+						;(setq py-force-py-shell-name-p t)
 
-    ;; switch to the interpreter after executing code
-					    ;(setq py-shell-switch-buffers-on-execute-p t)
-					    ;(setq py-switch-buffers-on-execute-p t)
-					    ; don't split windows
-					    ;(setq py-split-windows-on-execute-p nil)
-					    ; try to automagically figure out indentation
-					    ;(setq py-smart-indentation t)
-					    ;(with-output-to-temp-buffer "*IPython Completions*"
-					    ; (display-completion-list
-					    ;(all-completions pattern completions)))
-    ;; (set-buffer "*IPython Completions*")
-    ;; (switch-to-buffer "*IPython Completions*")
-    ;; (goto-char (point-min))
-    ;; (when
-    ;;  (search-forward (car (all-completions pattern completions)))
-    ;;  (forward-word -1)
-    ;;  (delete-other-windows)
-    ;;  (word-at-point))
-					    ;)
-					    ; pymacs
-					    ;(add-to-list 'load-path "~/.emacs.d/pymacs-0.25")
-					    ;(autoload 'pymacs-apply "pymacs")
-					    ;(autoload 'pymacs-call "pymacs")
-					    ;(autoload 'pymacs-eval "pymacs" nil t)
-					    ;(autoload 'pymacs-exec "pymacs" nil t)
-					    ;(autoload 'pymacs-load "pymacs" nil t)
-					    ;(autoload 'pymacs-autoload "pymacs")
+	;; switch to the interpreter after executing code
+						;(setq py-shell-switch-buffers-on-execute-p t)
+						;(setq py-switch-buffers-on-execute-p t)
+						; don't split windows
+						;(setq py-split-windows-on-execute-p nil)
+						; try to automagically figure out indentation
+						;(setq py-smart-indentation t)
+						;(with-output-to-temp-buffer "*IPython Completions*"
+						; (display-completion-list
+						;(all-completions pattern completions)))
+	;; (set-buffer "*IPython Completions*")
+	;; (switch-to-buffer "*IPython Completions*")
+	;; (goto-char (point-min))
+	;; (when
+	;;  (search-forward (car (all-completions pattern completions)))
+	;;  (forward-word -1)
+	;;  (delete-other-windows)
+	;;  (word-at-point))
+						;)
+						; pymacs
+						;(add-to-list 'load-path "~/.emacs.d/pymacs-0.25")
+						;(autoload 'pymacs-apply "pymacs")
+						;(autoload 'pymacs-call "pymacs")
+						;(autoload 'pymacs-eval "pymacs" nil t)
+						;(autoload 'pymacs-exec "pymacs" nil t)
+						;(autoload 'pymacs-load "pymacs" nil t)
+						;(autoload 'pymacs-autoload "pymacs")
 
-					    ; ropemacs
-					    ;(require 'pymacs)
-					    ;(pymacs-load "ropemacs" "rope-")
+						; ropemacs
+						;(require 'pymacs)
+						;(pymacs-load "ropemacs" "rope-")
   #+end_src
 
 
@@ -225,6 +446,14 @@
 * muttrc
 
 * md - MarkDown
+  #+begin_src emacs-lisp :results silent
+    (use-package markdown-mode
+      :ensure markdown-mode+
+      :config
+      (add-hook 'mark-down-mode-hook (lambda () (set-fill-column 120)
+				       (auto-fill-mode t)))
+      )
+  #+end_src
 
 * adoc - asciidoc
 
