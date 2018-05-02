@@ -9,12 +9,16 @@
 ;; "THE BEER-WARE LICENSE" (Revision 42):
 ;; As long as you retain this notice you
 ;; can do whatever you want with this stuff. If we meet some day, and you think
-;; this stuff is worth it, you can buy me a beer in return.   Felix alias Lin ()
+;; this stuff is worth it, you can buy me a beer in return.   Felix alias Lin (林宜德)
 ;; ----------------------------------------------------------------------------
 
 
 ;;; Code:
-;; (package-initialize)
+
+;; I'm still unsure why this line is necessary, but for reference, here:
+;; [[https://emacs.stackexchange.com/questions/5828/why-do-i-have-to-add-each-package-to-load-path-or-problem-with-require-packag]]
+;; [[https://github.com/jwiegley/use-package/issues/275]]
+(package-initialize)
 
 ;; (add-to-list 'load-path "~/progBin/org-mode/lisp")
 ;; (add-to-list 'load-path "~/progBin/org-mode/contrib/lisp")
@@ -56,18 +60,3 @@
 
 ;; (provide 'init)
 ;; ;;; init.el ends here
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (which-key use-package smartparens ranger rainbow-mode rainbow-delimiters py-autopep8 paredit ob-ipython multiple-cursors multi-term magit linum-relative latex-preview-pane latex-math-preview indent-guide highlight-symbol helm-projectile helm-c-yasnippet ggtags flycheck fill-column-indicator expand-region evil emms elscreen elpy diminish diff-hl dashboard company-statistics calfw beacon autopair auctex aggressive-indent))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
