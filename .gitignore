@@ -52,3 +52,5 @@ private/*
 .trello/*
 .python-environments/*
 request/*
+.last-package-update-day
+url/*

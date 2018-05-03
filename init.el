@@ -46,13 +46,19 @@
   (when (not (require 'use-package nil 'noerror))
            (package-refresh-contents)
            (package-install 'use-package))
-  (auto-package-update-now))
+  (use-package auto-package-update
+    :ensure t
+    :config
+    (setq auto-package-update-delete-old-versions t)
+    (setq auto-package-update-hide-results t)
+    (auto-package-update-maybe)))
 
 (defun peoplesEmacs/use-neo-layout ()
   (global-set-key (kbd "C-ö") ctl-x-map)
+  (setq peoplesEmacs/neo-layout-used? t)
   (use-package evil
     :ensure t
-    :config
+    ;:config
     ))
     
 ;;; Config:
@@ -108,4 +114,3 @@
 
 ;; (provide 'init)
 ;; ;;; init.el ends here
-
