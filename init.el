@@ -1,16 +1,17 @@
 ;;; Commentary:
 ;; This is like my 4th Emacs config. It's mainly inspired by
 ;; github.com/exot and spacemacs. You can use it for whatever you want
-;;
+
 
 ;;; License:
 ;;
-;; ----------------------------------------------------------------------------
+;; -------------------------------------------------------------------
 ;; "THE BEER-WARE LICENSE" (Revision 42):
-;; As long as you retain this notice you
-;; can do whatever you want with this stuff. If we meet some day, and you think
-;; this stuff is worth it, you can buy me a beer in return.   Felix alias Lin (林宜德)
-;; ----------------------------------------------------------------------------
+;;
+;; As long as you retain this notice you can do whatever you want with
+;; this stuff. If we meet some day, and you think this stuff is worth
+;; it, you can buy me a beer in return.  Felix alias Lin (林宜德)
+;; -------------------------------------------------------------------
 
 
 ;;; Code:
