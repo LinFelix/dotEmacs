@@ -16,26 +16,54 @@
 
 ;;; Code:
 
+;;;
+;;; Peoples Emacs:
+;;;
 
-(defun peoplesEmacs/no-prompts  ()
+(defgroup peoplesEmacs nil
+  "The peoplesEmacs group")
+
+
+;;;
+;;; Peoples Emacs Core:
+;;;
+
+(defgroup peoplesEmacs/core nil
+  "The core configurations"
+  :group 'peoplesEmacs)
+
+(defun peoplesEmacs/core/no-prompts ()
+  "There are annoying prompts in Emacs.
+   Let's get rid of them"
   (fset 'yes-or-no-p 'y-or-n-p)
   (setq vc-follow-symlinks t))
 
-(defun peoplesEmacs/no-fluff ()
+(defun peoplesEmacs/core/no-fluff ()
+  "Emacs has many 'visual benefits' that make it intuitive for
+   some Generation Z people .. I think?"
   (tool-bar-mode 0)
   (scroll-bar-mode 0)
   (menu-bar-mode 0)
   (setq inital-scratch-message nil)
-  (peoplesEmacs/no-prompts))
+  (peoplesEmacs/core/no-prompts)
+  (blink-cursor-mode nil))
 
-(defun peoplesEmacs/use-utf-8 ()
+(defun peoplesEmacs/core/use-utf-8 ()
+  "If you are not Using UTF->=8, get out!"
   (set-default-coding-systems 'utf-8)
   (prefer-coding-system 'utf-8)
   (set-terminal-coding-system 'utf-8)
   (set-keyboard-coding-system 'utf-8)
   (setq buffer-file-coding-system 'utf-8))
 
-(defun peoplesEmacs/setup-packages ()
+(defun peoplesEmacs/core/setup-packages ()
+  "Managing packages is everybodies hobby, isn't it? Or just in
+   our basement?"
+  ;; I'm still unsure why this line is necessary, but for reference,
+  ;; here:
+  ;; https://emacs.stackexchange.com/questions/5828/why-do-i-have-to-add-each-package-to-load-path-or-problem-with-require-packag
+  ;; https://github.com/jwiegley/use-package/issues/275
+  
   (package-initialize)
   (require 'package)
   (setq package-archives
