@@ -32,6 +32,11 @@
   "The core configurations"
   :group 'peoplesEmacs)
 
+(defun pE/tweak ()
+  "Having a function to tweak Emacs is just ... nevermind!"
+  (interactive)
+  (find-file "~/.emacs.d/init.el"))
+
 (defun peoplesEmacs/core/no-prompts ()
   "There are annoying prompts in Emacs.
    Let's get rid of them"
