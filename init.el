@@ -42,6 +42,20 @@
   (interactive)
   (find-file "~/.emacs.d/init.el"))
 
+(defun peoplesEmacs/core/history ()
+  "We want to remember places we've been to, cos that's more
+   intuitive I guess"
+  (savehist-mode t)
+  (save-place-mode t)
+  (use-package recentf
+    :ensure t
+    :delight
+    :init (recentf-mode t)
+    :config
+    (add-to-list 'recentf-exclude "~/.emacs.d/games/*")
+    (add-to-list 'recentf-exclude "~/.emacs.d/elpa/*")
+    (add-to-list 'recentf-exclude "\\\*Org Src *.org\[ * \]\*")))
+
 (defun peoplesEmacs/core/no-prompts ()
   "There are annoying prompts in Emacs.
    Let's get rid of them"
@@ -113,6 +127,9 @@
 ;; [[https://emacs.stackexchange.com/questions/5828/why-do-i-have-to-add-each-package-to-load-path-or-problem-with-require-packag]]
 ;; [[https://github.com/jwiegley/use-package/issues/275]]
 (package-initialize)
+(defun peoplesEmacs/core/navigationAndWindowing ()
+  (winner-mode t))
+
 
 ;; TODO: put a new version of org-mode in a script with a reasonable
 ;; PATH
@@ -124,6 +141,7 @@
 (peoplesEmacs/setup-packages)
 (peoplesEmacs/core/use-utf-8)
 (when (eval peoplesEmacs/core/neo-layout-used?) (peoplesEmacs/core/use-neo-layout))
+(peoplesEmacs/core/history)
 (peoplesEmacs/core/editing)
 
 ;; we want a couple of sane defaults
