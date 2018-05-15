@@ -111,6 +111,11 @@
 (defun peoplesEmacs/core/use-neo-layout ()
   (global-set-key (kbd "C-ö") ctl-x-map)
   (global-set-key (kbd "M-s-j") 'other-window)
+  (global-set-key (kbd "C-ö g") 'magit-status)
+  (global-set-key (kbd "C-f") 'isearch-forward)
+  (define-key isearch-mode-map "\C-f" 'isearch-repeat-forward)
+					;(global-set-key (kbd "C-s") 'save-buffer)
+					;  (global-set-key ())
 					;(use-package evil
 					;  :ensure t
 					;  ;:config
@@ -133,7 +138,9 @@
     :ensure t
     :config
     (load-theme 'monokai t t)
-    (set-background-color "black")))
+    (set-background-color "black")
+    (custom-set-faces
+     '(font-lock-comment-face ((t (:background "#202020" :foreground "#75715E")))))))
 
 
 (defun peoplesEmacs/helper/prog-mode-hl-line-mode ()
@@ -218,9 +225,8 @@
 (use-package paredit
   :delight
   :ensure t
-  :hook ((emacs-lisp-mode ielm-mode clojure-mode clojurec-mode
-  clojurescript-mode common-lisp-mode slime-mode scheme-mode)
-  . paredit-mode))
+  :hook ((lisp-mode eval-expression-minibuffer-setup lisp-mode lisp-inetraction emacs-lisp-mode ielm-mode clojure-mode clojurec-mode clojurescript-mode common-lisp-mode slime-mode scheme-mode)
+	 . enable-paredit-mode))
 
 (use-package aggressive-indent
   :ensure t
