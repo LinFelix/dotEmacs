@@ -110,6 +110,7 @@
 
 (defun peoplesEmacs/core/use-neo-layout ()
   (global-set-key (kbd "C-ö") ctl-x-map)
+  (global-set-key (kbd "M-s-j") 'other-window)
 					;(use-package evil
 					;  :ensure t
 					;  ;:config
@@ -310,7 +311,7 @@
   (setq TeX-parse-self t)
   (setq-default TeX-master t)
 					;  (latex-preview-pane-enable)
-  (setq-default TeX-electric-math ("$" . "$"))
+  (setq-default TeX-electric-math '("$" . "$"))
   (setq-default TeX-electric-sub-and-superscript t)
   (setq-default LaTeX-electric-left-right-brace t)
   
