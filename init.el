@@ -131,6 +131,43 @@
 			     (progn (end-of-visual-line) (point))))))
   (hl-line-mode))
 
+(setq blubb
+      '((name . "Helm at the Emacs")
+	(candidates . ("Office Code Pro" "Go MONO" "GO" "Hack" "Monaco" "Fira-Mono"))
+	(action . (lambda (candidate)
+		    (set-frame-font candidate nil t)))))
+
+(defun pE/font-selction ()
+  (interactive)
+  (helm :sources '(blubb)))
+
+
+(defun peoplesEmacs/core/font ()
+  "Ok, this function is not going to pretty because it will not
+   last for ever and will possibly die as a construction side.
+   There is a list of fonts, which are supposed to get checked
+   first if they are somehow available on the system. Then set
+   them for different modes/languages
+   https://emacs.stackexchange.com/questions/3038/using-a-different-font-for-each-major-mode:
+
+   Some of the fonts are go - https://blog.golang.org/go-fonts
+   Iosevka - https://github.com/be5invis/Iosevka - this one has
+             many features, it seems
+   Monaco - well Monaco
+   Source-code-pro ->> Office-Code-pro
+                   - https://github.com/nathco/Office-Code-Pro
+   hack - https://github.com/source-foundry/Hack"
+  ;; (set-frame-font "Office Code Pro" nil t)
+  ;; (set-frame-font "Go MONO" nil t)
+  (set-frame-font "Hack" nil t)
+  ;; (set-frame-font "Monaco 11" nil t)
+  ;; (set-frame-font "Fira-Mono10" nil t)
+
+  
+  
+  (add-hook 'prog-mode-hook #'peoplesEmacs/helper/prog-mode-hl-line-mode)
+  (add-hook 'text-mode-hook #'hl-line-mode))
+
 (defun peoplesEmacs/core/editing ()
   (show-paren-mode t)
   (delete-selection-mode t))
@@ -160,6 +197,7 @@
 (peoplesEmacs/core/setup-packages)
 (peoplesEmacs/core/history)
 (peoplesEmacs/core/theme)
+(peoplesEmacs/core/font)
 (peoplesEmacs/core/editing)
 
 (use-package nlinum-relative
