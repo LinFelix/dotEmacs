@@ -173,6 +173,23 @@
   :hook ((prog-mode text-mode) . beacon-mode))
 
 
+(use-package helm
+  :delight 
+  :ensure t
+  :init (helm-mode t)
+  :config
+  (setq helm-autoresize-mode 1)
+  (setq helm-autoresize-min-height 0)
+  (setq helm-autoresize-max-height 80)
+  (setq-default helm-ff-file-name-history-use-recentf t)
+  (setq-default helm-split-window-in-side-p t)
+  :bind
+  ("M-ö" . helm-M-x)
+  ("C-x r b" . helm-filtered-bookmarks)
+  ("C-ö C-f" . helm-find-files)
+  ("C-x C-b" . helm-buffers-list)
+  ("C-x b " . helm-for-files))
+
 
 (use-package delight
   :ensure t
