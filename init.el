@@ -32,6 +32,11 @@
   "The core configurations"
   :group 'peoplesEmacs)
 
+(defcustom peoplesEmacs/core/neo-layout-used? t
+  "Should adjustment for the neo2 keyboard layout be made?"
+  :type 'boolean
+  :group 'peoplesEmacs/core)
+
 (defun pE/tweak ()
   "Having a function to tweak Emacs is just ... nevermind!"
   (interactive)
@@ -87,15 +92,22 @@
     (setq auto-package-update-hide-results t)
     (auto-package-update-maybe)))
 
-(defun peoplesEmacs/use-neo-layout ()
+(defun peoplesEmacs/core/use-neo-layout ()
   (global-set-key (kbd "C-ö") ctl-x-map)
-  (setq peoplesEmacs/neo-layout-used? t)
-  (use-package evil
+					;(use-package evil
+					;  :ensure t
+					;  ;:config
+					;  ))
+  )
     :ensure t
     ;:config
     ))
     
 ;;; Config:
+
+(defun peoplesEmacs/core/editing ()
+  (show-paren-mode t)
+  (delete-selection-mode t))
 
 ;; I'm still unsure why this line is necessary, but for reference, here:
 ;; [[https://emacs.stackexchange.com/questions/5828/why-do-i-have-to-add-each-package-to-load-path-or-problem-with-require-packag]]
@@ -110,6 +122,10 @@
 (peoplesEmacs/no-fluff)
 (peoplesEmacs/use-utf-8)
 (peoplesEmacs/setup-packages)
+(peoplesEmacs/core/use-utf-8)
+(when (eval peoplesEmacs/core/neo-layout-used?) (peoplesEmacs/core/use-neo-layout))
+(peoplesEmacs/core/editing)
+
 ;; we want a couple of sane defaults
 ;; (org-babel-load-file "~/.emacs.d/peoplesEmacs/sanity.org")
 
