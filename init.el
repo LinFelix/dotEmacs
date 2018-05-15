@@ -212,6 +212,20 @@
 (peoplesEmacs/core/font)
 (peoplesEmacs/core/editing)
 
+
+;;; ** Core Modes:
+(use-package paredit
+  :delight
+  :ensure t
+  :hook ((emacs-lisp-mode ielm-mode clojure-mode clojurec-mode
+  clojurescript-mode common-lisp-mode slime-mode scheme-mode)
+  . paredit-mode))
+
+(use-package aggressive-indent
+  :ensure t
+  :delight
+  :hook ((prog-mode) . aggressive-indent-mode))
+
 (use-package nlinum-relative
   :ensure t
   :delight
@@ -239,6 +253,18 @@
   ("C-ö C-f" . helm-find-files)
   ("C-x C-b" . helm-buffers-list)
   ("C-x b " . helm-for-files))
+
+(use-package smartparens
+  :ensure t)
+
+(use-package hungry-delete
+  :ensure t)
+
+(use-package move-text
+  :ensure t)
+
+(use-package expand-region
+  :ensure t)
 
 
 (use-package delight
