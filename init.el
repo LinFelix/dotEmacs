@@ -231,6 +231,25 @@
   :delight
   :hook ((prog-mode text-mode) . nlinum-relative-mode))
 
+(use-package  yasnippet
+  :delight
+  :ensure t
+  :init
+  (add-hook 'after-init-hook 'yas-global-mode)
+  (setq-default yas-snippet-dirs
+		'("~/.emacs.d/snippets/yasnippet-snippets" ;; from AndreaCrotti/yasinppet-snippets
+		  "~/my_snippets" ;; my own snippets
+		  ))
+  (setq-default yas-prompt-functions '(yas-completing-prompt))
+  :config
+  (setq yas-triggers-in-field t
+	yas-wrap-around-region t))
+
+(use-package company
+  :ensure t
+  :delight
+  :after (gtags))
+
 (use-package beacon
   :ensure t
   :delight
@@ -254,6 +273,10 @@
   ("C-x C-b" . helm-buffers-list)
   ("C-x b " . helm-for-files))
 
+;; TODO
+(use-package multiple-cursors
+  :ensure t)
+
 (use-package smartparens
   :ensure t)
 
@@ -266,6 +289,9 @@
 (use-package expand-region
   :ensure t)
 
+(use-package gtags
+  :ensure t
+  :delight)
 
 (use-package delight
   :ensure t
