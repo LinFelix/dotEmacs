@@ -95,16 +95,18 @@
          (("gnu" . "https://elpa.gnu.org/packages/")
           ("melpa" . "https://melpa.org/packages/")
           ("marmalade" . "https://marmalade-repo.org/packages/"))))
-  (package-refresh-contents)
+					;(package-refresh-contents)
   (when (not (require 'use-package nil 'noerror))
-           (package-refresh-contents)
-           (package-install 'use-package))
+
+    ;; Enabling the following 
+    (package-refresh-contents)
+    (package-install 'use-package))
   (use-package auto-package-update
     :ensure t
     :config
     (setq auto-package-update-delete-old-versions t)
     (setq auto-package-update-hide-results t)
-    (auto-package-update-maybe)))
+    (auto-package-update-maybe) ))
 
 (defun peoplesEmacs/core/use-neo-layout ()
   (global-set-key (kbd "C-ö") ctl-x-map)
@@ -123,12 +125,18 @@
   (show-paren-mode t)
   (delete-selection-mode t))
 
-;; I'm still unsure why this line is necessary, but for reference, here:
-;; [[https://emacs.stackexchange.com/questions/5828/why-do-i-have-to-add-each-package-to-load-path-or-problem-with-require-packag]]
-;; [[https://github.com/jwiegley/use-package/issues/275]]
-(package-initialize)
 (defun peoplesEmacs/core/navigationAndWindowing ()
   (winner-mode t))
+
+;;;  #################################################################
+;;;                                                                  #
+;;;  Config:                                                         #
+;;;                                                                  #
+;;;  The following first sets the possibly desired settings and      #
+;;;  executes the neccessary configurations followed by customizing  #
+;;;  packages from elpa/melpa/marmelade/gnu.                         #
+;;;                                                                  #
+;;;  #################################################################
 
 
 ;; TODO: put a new version of org-mode in a script with a reasonable
@@ -138,9 +146,9 @@
 
 (peoplesEmacs/no-fluff)
 (peoplesEmacs/use-utf-8)
-(peoplesEmacs/setup-packages)
 (peoplesEmacs/core/use-utf-8)
 (when (eval peoplesEmacs/core/neo-layout-used?) (peoplesEmacs/core/use-neo-layout))
+(peoplesEmacs/core/setup-packages)
 (peoplesEmacs/core/history)
 (peoplesEmacs/core/editing)
 
