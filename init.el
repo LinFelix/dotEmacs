@@ -115,11 +115,21 @@
 					;  ;:config
 					;  ))
   )
+(defun peoplesEmacs/core/theme () ;;
+  "Eventually replace by own theme"
+  (use-package monokai-theme
     :ensure t
-    ;:config
-    ))
-    
-;;; Config:
+    :config
+    (load-theme 'monokai t t)
+    (set-background-color "black")))
+
+
+(defun peoplesEmacs/helper/prog-mode-hl-line-mode ()
+  (setq hl-line-range-function
+	#'(lambda () (save-excursion
+		       (cons (progn (beginning-of-visual-line) (point))
+			     (progn (end-of-visual-line) (point))))))
+  (hl-line-mode))
 
 (defun peoplesEmacs/core/editing ()
   (show-paren-mode t)
@@ -145,13 +155,28 @@
 (add-to-list 'load-path "~/progBin/org-mode/contrib/lisp")
 
 (peoplesEmacs/no-fluff)
-(peoplesEmacs/use-utf-8)
 (peoplesEmacs/core/use-utf-8)
 (when (eval peoplesEmacs/core/neo-layout-used?) (peoplesEmacs/core/use-neo-layout))
 (peoplesEmacs/core/setup-packages)
 (peoplesEmacs/core/history)
+(peoplesEmacs/core/theme)
 (peoplesEmacs/core/editing)
 
+(use-package nlinum-relative
+  :ensure t
+  :delight
+  :hook ((prog-mode text-mode) . nlinum-relative-mode))
+
+(use-package beacon
+  :ensure t
+  :delight
+  :hook ((prog-mode text-mode) . beacon-mode))
+
+
+
+(use-package delight
+  :ensure t
+  :delight)
 ;; we want a couple of sane defaults
 ;; (org-babel-load-file "~/.emacs.d/peoplesEmacs/sanity.org")
 
@@ -172,16 +197,6 @@
 
 ;; ;; org
 ;; (org-babel-load-file "~/.emacs.d/peoplesEmacs/org.org")
-
-;; ;; set font
-;; (add-to-list 'default-frame-alist
-;;              '(font . "Fira Mono-10"))
-
-;; ;; get a theme
-;; (use-package dracula-theme
-;;   :ensure t
-;;   :config (load-theme 'dracula t)
-;;   (set-background-color "black"))
 
 ;; ;; notmuch configuration
 ;; (use-package notmuch
