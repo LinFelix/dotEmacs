@@ -115,6 +115,17 @@
 					;  ;:config
 					;  ))
   )
+
+(defun peoplesEmacs/core/no-clutter ()
+  (setq custom-file "~/customize")
+  
+  (let '(tmp_dir "~/cacheAndTmp/emacs_auto_save")
+    '((setq backup-directory-alist
+            '((".*" . ,"~/cacheAndTmp/emacs_auto_save")))
+      (setq auto-save-file-name-transforms
+            '((".*" ,tmp_dir)))
+      (setq auto-save-list-file-prefix tmp_dir))))
+
 (defun peoplesEmacs/core/theme () ;;
   "Eventually replace by own theme"
   (use-package monokai-theme
@@ -191,10 +202,11 @@
 (add-to-list 'load-path "~/progBin/org-mode/lisp")
 (add-to-list 'load-path "~/progBin/org-mode/contrib/lisp")
 
-(peoplesEmacs/no-fluff)
+(peoplesEmacs/core/no-fluff)
 (peoplesEmacs/core/use-utf-8)
 (when (eval peoplesEmacs/core/neo-layout-used?) (peoplesEmacs/core/use-neo-layout))
 (peoplesEmacs/core/setup-packages)
+(peoplesEmacs/core/no-clutter)
 (peoplesEmacs/core/history)
 (peoplesEmacs/core/theme)
 (peoplesEmacs/core/font)
@@ -259,4 +271,4 @@
 ;;   :config (org-babel-load-file "~/.emacs.d/private/notmuch.org"))
 
 ;; (provide 'init)
-;; ;;; init.el ends here
+;;; init.el ends here
