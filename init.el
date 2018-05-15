@@ -296,6 +296,42 @@
 (use-package delight
   :ensure t
   :delight)
+
+(use-package latex-math-preview
+  :ensure t
+  :delight
+  :after (tex))
+
+(use-package tex
+  :ensure auctex
+  :mode ("\\.tex\\'" . TeX-mode)
+  :config
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq-default TeX-master t)
+					;  (latex-preview-pane-enable)
+  (setq-default TeX-electric-math ("$" . "$"))
+  (setq-default TeX-electric-sub-and-superscript t)
+  (setq-default LaTeX-electric-left-right-brace t)
+  
+  ;; (add-hook 'LaTeX-mode-hook '(lambda ()
+  ;; 				(TeX-PDF-mode 1)
+  ;; 				(TeX-source-correlate-mode 1)
+  ;; 				(TeX-fold-mode 1)))
+
+  ;; PDF Viewer
+
+  (add-to-list 'TeX-view-program-selection
+               '(output-pdf "Evince"))
+
+					;:hook
+  (setq fill-column 80)
+  (auto-fill-mode t)
+  (autopair-mode -1)
+  (TeX-PDF-mode 1)
+  (TeX-source-correlate-mode 1)
+  (TeX-fold-mode 1))
+
 ;; we want a couple of sane defaults
 ;; (org-babel-load-file "~/.emacs.d/peoplesEmacs/sanity.org")
 
