@@ -68,9 +68,34 @@
   (tool-bar-mode 0)
   (scroll-bar-mode 0)
   (menu-bar-mode 0)
-  (setq inital-scratch-message nil)
+  (setq-default inital-scratch-message nil)
   (peoplesEmacs/core/no-prompts)
-  (blink-cursor-mode nil))
+  (blink-cursor-mode nil)
+  (use-package delight
+    :ensure t
+    :delight))
+
+(defun peoplesEmacs/core/checkers ()
+  "Text."
+  nil)
+
+(defun _peoplesEmacs/core/vc ()
+  "Text."
+  nil)
+
+(defun peoplesEmacs/core/projects ()
+  "Projectmanagement configuration."
+  (use-package projectile
+    :ensure t
+    :delight '(:eval (concat "P[" (projectile-project-name) "]")))
+  (global-ede-mode t)
+  (_peoplesEmacs/core/vc))
+
+(defun peoplesEmacs/core/folding ()
+  "Text.")
+
+(defun peoplesEmacs/core/completion ()
+  "Text.")
 
 (defun peoplesEmacs/core/use-utf-8 ()
   "If you are not Using UTF->=8, get out!"
@@ -109,6 +134,8 @@
     (auto-package-update-maybe) ))
 
 (defun peoplesEmacs/core/use-neo-layout ()
+  "When using the neo2 keyboard layout a bunch of things are not
+   where they are on querty/quertz.  So peoplesEmacs adapts."
   (global-set-key (kbd "C-ö") ctl-x-map)
   (global-set-key (kbd "M-s-j") 'other-window)
   (global-set-key (kbd "C-ö g") 'magit-status)
@@ -133,30 +160,32 @@
       (setq auto-save-list-file-prefix tmp_dir))))
 
 (defun peoplesEmacs/core/theme () ;;
-  "Eventually replace by own theme"
+  "Eventually replace by own theme."
   (use-package monokai-theme
     :ensure t
     :config
-    (load-theme 'monokai t t)
+    (load-theme 'monokai t t) 
     (set-background-color "black")
     (custom-set-faces
      '(font-lock-comment-face ((t (:background "#202020" :foreground "#75715E")))))))
 
 
 (defun peoplesEmacs/helper/prog-mode-hl-line-mode ()
-  (setq hl-line-range-function
-	#'(lambda () (save-excursion
-		       (cons (progn (beginning-of-visual-line) (point))
-			     (progn (end-of-visual-line) (point))))))
+  "Enable a non-annoying hl-line-mode."
+  (setq-default hl-line-range-function
+		#'(lambda () (save-excursion
+			       (cons (progn (beginning-of-visual-line) (point))
+				     (progn (end-of-visual-line) (point))))))
   (hl-line-mode))
 
-(setq blubb
-      '((name . "Helm at the Emacs")
-	(candidates . ("Office Code Pro" "Go MONO" "GO" "Hack" "Monaco" "Fira-Mono"))
-	(action . (lambda (candidate)
-		    (set-frame-font candidate nil t)))))
+(setq-default blubb
+	      '((name . "Helm at the Emacs")
+		(candidates . ("Office Code Pro" "Go MONO" "GO" "Hack" "Monaco" "Fira-Mono" "Fira-Mono Code"))
+		(action . (lambda (candidate)
+			    (set-frame-font candidate nil t)))))
 
 (defun pE/font-selction ()
+  "Select a Font."
   (interactive)
   (helm :sources '(blubb)))
 
@@ -194,6 +223,7 @@
 (defun peoplesEmacs/core/navigationAndWindowing ()
   (winner-mode t))
 
+
 ;;;  #################################################################
 ;;;                                                                  #
 ;;;  Config:                                                         #
@@ -210,10 +240,10 @@
 (add-to-list 'load-path "~/progBin/org-mode/lisp")
 (add-to-list 'load-path "~/progBin/org-mode/contrib/lisp")
 
+(peoplesEmacs/core/setup-packages)
 (peoplesEmacs/core/no-fluff)
 (peoplesEmacs/core/use-utf-8)
 (when (eval peoplesEmacs/core/neo-layout-used?) (peoplesEmacs/core/use-neo-layout))
-(peoplesEmacs/core/setup-packages)
 (peoplesEmacs/core/no-clutter)
 (peoplesEmacs/core/history)
 (peoplesEmacs/core/theme)
@@ -282,30 +312,6 @@
   ("M-f" . helm-occur)
   ("M-F" . helm-projectile-grep))
 
-;; TODO
-(use-package multiple-cursors
-  :ensure t)
-
-(use-package smartparens
-  :ensure t)
-
-(use-package hungry-delete
-  :ensure t)
-
-(use-package move-text
-  :ensure t)
-
-(use-package expand-region
-  :ensure t)
-
-(use-package gtags
-  :ensure t
-  :delight)
-
-(use-package delight
-  :ensure t
-  :delight)
-
 ;; which-key # shows the following possible key strokes and what they do
 (use-package which-key
   :delight
@@ -325,6 +331,29 @@
   (setq which-key-paging-prefixes '("C-x"))
   (setq which-key-paging-prefixes '("C-c"))
   (setq which-key-paging-key "M-ß"))
+
+(use-package dictcc
+  :ensure t)
+
+;; TODO
+(use-package multiple-cursors
+  :ensure t)
+
+(use-package smartparens
+  :ensure t)
+
+(use-package hungry-delete
+  :ensure t)
+
+(use-package move-text
+  :ensure t)
+
+(use-package expand-region
+  :ensure t)
+
+(use-package gtags
+  :ensure t
+  :delight)
 
 ;;; Langs and major modes-etc
 
