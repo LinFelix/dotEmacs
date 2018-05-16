@@ -112,10 +112,8 @@
   (global-set-key (kbd "C-ö") ctl-x-map)
   (global-set-key (kbd "M-s-j") 'other-window)
   (global-set-key (kbd "C-ö g") 'magit-status)
-  (global-set-key (kbd "C-f") 'isearch-forward)
   (define-key isearch-mode-map "\C-f" 'isearch-repeat-forward)
-					;(global-set-key (kbd "C-s") 'save-buffer)
-					;  (global-set-key ())
+  (global-set-key (kbd "C-s") 'save-buffer)
 					;(use-package evil
 					;  :ensure t
 					;  ;:config
