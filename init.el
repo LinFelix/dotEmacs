@@ -112,7 +112,9 @@
   (global-set-key (kbd "C-ö") ctl-x-map)
   (global-set-key (kbd "M-s-j") 'other-window)
   (global-set-key (kbd "C-ö g") 'magit-status)
-  (define-key isearch-mode-map "\C-f" 'isearch-repeat-forward)
+  (global-set-key (kbd "C-f") 'isearch-forward)
+  (global-set-key (kbd "C-ä") mode-specific-map)
+  (define-key isearch-mode-map "\C-f" 'isearch-repeat-forward) 
   (global-set-key (kbd "C-s") 'save-buffer)
 					;(use-package evil
 					;  :ensure t
@@ -262,7 +264,7 @@
 
 
 (use-package helm
-  :delight 
+  :delight helm-mode
   :ensure t
   :init (helm-mode t)
   :config
@@ -276,7 +278,9 @@
   ("C-x r b" . helm-filtered-bookmarks)
   ("C-ö C-f" . helm-find-files)
   ("C-x C-b" . helm-buffers-list)
-  ("C-x b " . helm-for-files))
+  ("C-x b " . helm-for-files)
+  ("M-f" . helm-occur)
+  ("M-F" . helm-projectile-grep))
 
 ;; TODO
 (use-package multiple-cursors
@@ -301,6 +305,28 @@
 (use-package delight
   :ensure t
   :delight)
+
+;; which-key # shows the following possible key strokes and what they do
+(use-package which-key
+  :delight
+  :ensure t
+  ;; :init (which-key-mode t)
+  :config
+  (which-key-setup-minibuffer)
+  (setq which-key-idle-delay 0.2)
+  (setq which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
+  (add-hook 'after-init-hook (
+  			      lambda ()
+  				     ;; this is a work around because which
+  				     ;; key wasn't showing
+  				     ;; »Did you try turning it of on again
+  				     (which-key-mode -1)
+				     (which-key-mode t)))
+  (setq which-key-paging-prefixes '("C-x"))
+  (setq which-key-paging-prefixes '("C-c"))
+  (setq which-key-paging-key "M-ß"))
+
+;;; Langs and major modes-etc
 
 (use-package latex-math-preview
   :ensure t
