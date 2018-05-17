@@ -469,11 +469,24 @@
   :ensure t
   :bind ("C-x r r" . ranger))
 
-(use-package gtags
-  :ensure t
-  :delight)
+(use-package emms
+  :ensure t)
 
+(use-package gist
+  :ensure t)
+
+(use-package dashboard
   :ensure t
+  :config
+  (dashboard-setup-startup-hook))
+					;(setq dashboard-banner-logo-title "")
+					;(setq dashboard-startup-banner nil)
+					;
+  ;; (setq dashboard-items '((agenda . 25)
+  ;; 			  (projects .7)
+  ;; 			  (bookmarks .12)
+  ;; 			  (recents . 20))))
+  ;;   (add-to-list 'dashboard-items '(agenda) t)
 
 ;;; Langs and major modes-etc
 
