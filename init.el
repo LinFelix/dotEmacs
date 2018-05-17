@@ -73,7 +73,12 @@
   (blink-cursor-mode nil)
   (use-package delight
     :ensure t
-    :delight))
+    :delight
+    :config
+    (delight '((emacs-lisp-mode "ξ")
+	       (eldoc-mode nil "eldoc")
+	       (hs-minor-mode nil "hs"))))
+  (blink-cursor-mode 0))
 
 (defun peoplesEmacs/core/checkers ()
   "Text."
@@ -87,12 +92,44 @@
   "Projectmanagement configuration."
   (use-package projectile
     :ensure t
-    :delight '(:eval (concat "P[" (projectile-project-name) "]")))
+    :init (projectile-global-mode)
+    :delight '(:eval (concat "P[" (projectile-project-name) "]"))
+    :config
+    (setq projectile-enable-caching t)
+    (setq projectile-completion-system 'helm))
+  (use-package helm-projectile
+    :ensure t
+    :after (helm projectile)
+    :init (helm-projectile-on))
   (global-ede-mode t)
-  (_peoplesEmacs/core/vc))
+  (_peoplesEmacs/core/vc)
+  (semantic-mode t)
+  (use-package neotree
+    :ensure t
+    :after (projectile)
+    :bind ([f8] . neotree-toggle)
+    :config
+    (setq projectile-switch-project-action 'neotree-projectile-action)
+    (setq neo-smart-open t))
+  ;; TODO
+  ;; cmake-mode
+  ;; stack
+  ;; pip
+  ;; ede config
+  ;; mvn
+  ;; clj
+  ;; cabal
+  ;; semantic config
+  )
 
 (defun peoplesEmacs/core/folding ()
-  "Text.")
+  (use-package yafolding
+    :ensure t
+    :delight
+    :hook (prog-mode . yafolding-mode)
+    :bind ("<C-tab>" . hs-toggle-hiding))
+  (global-set-key (kbd "<C-tab>") 'hs-toggle-hiding)
+  (add-hook 'prog-mode-hook 'hs-minor-mode))
 
 (defun peoplesEmacs/core/completion ()
   "Text.")
@@ -120,7 +157,6 @@
          (("gnu" . "https://elpa.gnu.org/packages/")
           ("melpa" . "https://melpa.org/packages/")
           ("marmalade" . "https://marmalade-repo.org/packages/"))))
-					;(package-refresh-contents)
   (when (not (require 'use-package nil 'noerror))
 
     ;; Enabling the following 
@@ -159,7 +195,7 @@
             '((".*" ,tmp_dir)))
       (setq auto-save-list-file-prefix tmp_dir))))
 
-(defun peoplesEmacs/core/theme () ;;
+(defun peoplesEmacs/core/theme () 
   "Eventually replace by own theme."
   (use-package monokai-theme
     :ensure t
@@ -169,12 +205,11 @@
     (custom-set-faces
      '(font-lock-comment-face ((t (:background "#202020" :foreground "#75715E")))))))
 
-
 (defun peoplesEmacs/helper/prog-mode-hl-line-mode ()
   "Enable a non-annoying hl-line-mode."
   (setq-default hl-line-range-function
-		#'(lambda () (save-excursion
-			       (cons (progn (beginning-of-visual-line) (point))
+				#'(lambda () (save-excursion
+			         (cons (progn (beginning-of-visual-line) (point))
 				     (progn (end-of-visual-line) (point))))))
   (hl-line-mode))
 
@@ -261,78 +296,11 @@
 (peoplesEmacs/core/theme)
 (peoplesEmacs/core/font)
 (peoplesEmacs/core/editing)
-
-
-;;; ** Core Modes:
-
-(use-package nlinum-relative
-  :ensure t
-  :delight
-  :hook ((prog-mode text-mode) . nlinum-relative-mode))
-
-(use-package  yasnippet
-  :delight
-  :ensure t
-  :init
-  (add-hook 'after-init-hook 'yas-global-mode)
-  (setq-default yas-snippet-dirs
-		'("~/.emacs.d/snippets/yasnippet-snippets" ;; from AndreaCrotti/yasinppet-snippets
-		  "~/my_snippets" ;; my own snippets
-		  ))
-  (setq-default yas-prompt-functions '(yas-completing-prompt))
-  :config
-  (setq yas-triggers-in-field t
-	yas-wrap-around-region t))
-
-(use-package company
-  :ensure t
-  :delight
-  :after (gtags))
-
-(use-package beacon
-  :ensure t
-  :delight
-  :hook ((prog-mode text-mode) . beacon-mode))
-
-
-(use-package helm
-  :delight helm-mode
-  :ensure t
-  :init (helm-mode t)
-  :config
-  (setq helm-autoresize-mode 1)
-  (setq helm-autoresize-min-height 0)
-  (setq helm-autoresize-max-height 80)
-  (setq-default helm-ff-file-name-history-use-recentf t)
-  (setq-default helm-split-window-in-side-p t)
-  :bind
-  ("M-ö" . helm-M-x)
-  ("C-x r b" . helm-filtered-bookmarks)
-  ("C-x f" . helm-find-files)
-  ("C-x C-b" . helm-buffers-list)
-  ("C-x b" . helm-for-files)
-  ("M-f" . helm-occur)
-  ("M-F" . helm-projectile-grep))
-
-;; which-key # shows the following possible key strokes and what they do
-(use-package which-key
-  :delight
-  :ensure t
-  ;; :init (which-key-mode t)
-  :config
-  (which-key-setup-minibuffer)
-  (setq which-key-idle-delay 0.2)
-  (setq which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
-  (add-hook 'after-init-hook (
-  			      lambda ()
-  				     ;; this is a work around because which
-  				     ;; key wasn't showing
-  				     ;; »Did you try turning it of on again
-  				     (which-key-mode -1)
-				     (which-key-mode t)))
-  (setq which-key-paging-prefixes '("C-x"))
-  (setq which-key-paging-prefixes '("C-c"))
-  (setq which-key-paging-key "M-ß"))
+(peoplesEmacs/core/checkers)
+(peoplesEmacs/core/projects)
+(peoplesEmacs/core/folding)
+(peoplesEmacs/core/completion)
+(peoplesEmacs/core/visuals)
 
 (use-package dictcc
   :ensure t)
@@ -350,9 +318,9 @@
 (use-package move-text
   :ensure t)
 
-(use-package expand-region
+(use-package ranger
   :ensure t
-  :bind ("C-@" . er/expand-region))
+  :bind ("C-x r r" . ranger))
 
 (use-package gtags
   :ensure t
