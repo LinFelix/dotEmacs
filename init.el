@@ -243,20 +243,32 @@
   ;; (set-frame-font "Office Code Pro" nil t)
   ;; (set-frame-font "Go MONO" nil t)
   (set-frame-font "Hack" nil t)
+  (use-package fill-column-indicator
+    :delight
+    :ensure t
+    :hook (prog-mode mail-mode text-mode) . 'fci-mode)
   ;; (set-frame-font "Monaco 11" nil t)
   ;; (set-frame-font "Fira-Mono10" nil t)
-
-  
-  
   (add-hook 'prog-mode-hook #'peoplesEmacs/helper/prog-mode-hl-line-mode)
   (add-hook 'text-mode-hook #'hl-line-mode))
 
 (defun peoplesEmacs/core/editing ()
-  (show-paren-mode t)
-  (delete-selection-mode t))
+  (delete-selection-mode t)
+  (use-package undo-tree
+    :diminish ""
+    :ensure t
+    :init (global-undo-tree-mode t)
+    :config (setq-default undo-tree-visualizer-diff t
+       	                  undo-tree-visualizer-timestamps t)
+    :bind
+    ("C-z" . undo-tree-undo)
+    ("C-Z" . undo-tree-redo)
+    ("C-x C-z" . undo-tree-visualize))
   (use-package expand-region
     :ensure t
     :bind ("C-@" . er/expand-region))
+  (use-package autopair
+    :ensure t)
   (use-package paredit
     :delight
     :ensure t
