@@ -132,7 +132,71 @@
   (add-hook 'prog-mode-hook 'hs-minor-mode))
 
 (defun peoplesEmacs/core/completion ()
-  "Text.")
+  (use-package ggtags
+    :ensure t
+    :delight "g"
+    :hook (c-mode c++-mode java-mode perl-mode cperl-mode awk-mode asm-mode cobol-mode csharp-mode erlang-mode f90-mode fortran-mode javascript-mode lua-mode pascal-mode clisp-mode python-mode ruby-mode octave-mode scheme-mode lisp-mode tex-mode latex-mode vimrc-mode) . 'ggtags-mode)
+  (use-package company
+    ;; TODO requires more configuration
+    :after (ggtags)
+    :ensure t
+    :delight "cc"
+    :config (global-company-mode t))
+  (use-package auto-complete
+    :ensure t
+    :delight "ac")
+  ;; TODO automatic download new snippets and create them faster
+  (use-package  yasnippet
+    :delight
+    :ensure t
+    :init
+    (add-hook 'after-init-hook 'yas-global-mode)
+    (setq-default yas-snippet-dirs
+		  '("~/.emacs.d/snippets/yasnippet-snippets" ;; from AndreaCrotti/yasinppet-snippets
+		    "~/my_snippets" ;; my own snippets
+		    ))
+    (setq-default yas-prompt-functions '(yas-completing-prompt))
+    :config
+    (setq yas-triggers-in-field t
+	  yas-wrap-around-region t))
+  (use-package helm
+    :delight helm-mode
+    :ensure t
+    :init (helm-mode t)
+    :config
+    (setq helm-autoresize-mode 1)
+    (setq helm-autoresize-min-height 0)
+    (setq helm-autoresize-max-height 80)
+    (setq-default helm-ff-file-name-history-use-recentf t)
+    (setq-default helm-split-window-in-side-p t)
+    :bind
+    ("M-ö" . helm-M-x)
+    ("C-x r b" . helm-filtered-bookmarks)
+    ("C-x f" . helm-find-files)
+    ("C-x C-b" . helm-buffers-list)
+    ("C-x b" . helm-for-files)
+    ("M-f" . helm-occur)
+    ("M-F" . helm-projectile-grep))
+
+  ;; which-key # shows the following possible key strokes and what they do
+  (use-package which-key
+    :delight
+    :ensure t
+    ;; :init (which-key-mode t)
+    :config
+    (which-key-setup-minibuffer)
+    (setq which-key-idle-delay 0.2)
+    (setq which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
+    (add-hook 'after-init-hook (
+  				lambda ()
+  				;; this is a work around because which
+  				;; key wasn't showing
+  				;; »Did you try turning it of on again
+  				(which-key-mode -1)
+				(which-key-mode t)))
+    (setq which-key-paging-prefixes '("C-x"))
+    (setq which-key-paging-prefixes '("C-c"))
+    (setq which-key-paging-key "M-ß")))
 
 (defun peoplesEmacs/core/use-utf-8 ()
   "If you are not Using UTF->=8, get out!"
