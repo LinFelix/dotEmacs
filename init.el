@@ -224,7 +224,6 @@
   (interactive)
   (helm :sources '(blubb)))
 
-
 (defun peoplesEmacs/core/font ()
   "Ok, this function is not going to pretty because it will not
    last for ever and will possibly die as a construction side.
@@ -338,9 +337,7 @@
   :ensure t
   :delight)
 
-(use-package ranger
   :ensure t
-  :bind ("C-x r r" . ranger))
 
 ;;; Langs and major modes-etc
 
