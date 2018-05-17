@@ -219,6 +219,18 @@
 (defun peoplesEmacs/core/editing ()
   (show-paren-mode t)
   (delete-selection-mode t))
+  (use-package expand-region
+    :ensure t
+    :bind ("C-@" . er/expand-region))
+  (use-package paredit
+    :delight
+    :ensure t
+    :hook ((lisp-mode eval-expression-minibuffer-setup lisp-mode lisp-inetraction emacs-lisp-mode ielm-mode clojure-mode clojurec-mode clojurescript-mode common-lisp-mode slime-mode scheme-mode)
+	   . enable-paredit-mode))
+  (use-package aggressive-indent
+    :ensure t
+    :delight
+    :hook ((prog-mode) . aggressive-indent-mode)))
 
 (defun peoplesEmacs/core/navigationAndWindowing ()
   (winner-mode t))
@@ -252,16 +264,6 @@
 
 
 ;;; ** Core Modes:
-(use-package paredit
-  :delight
-  :ensure t
-  :hook ((lisp-mode eval-expression-minibuffer-setup lisp-mode lisp-inetraction emacs-lisp-mode ielm-mode clojure-mode clojurec-mode clojurescript-mode common-lisp-mode slime-mode scheme-mode)
-	 . enable-paredit-mode))
-
-(use-package aggressive-indent
-  :ensure t
-  :delight
-  :hook ((prog-mode) . aggressive-indent-mode))
 
 (use-package nlinum-relative
   :ensure t
@@ -306,9 +308,9 @@
   :bind
   ("M-ö" . helm-M-x)
   ("C-x r b" . helm-filtered-bookmarks)
-  ("C-ö C-f" . helm-find-files)
+  ("C-x f" . helm-find-files)
   ("C-x C-b" . helm-buffers-list)
-  ("C-x b " . helm-for-files)
+  ("C-x b" . helm-for-files)
   ("M-f" . helm-occur)
   ("M-F" . helm-projectile-grep))
 
@@ -349,7 +351,8 @@
   :ensure t)
 
 (use-package expand-region
-  :ensure t)
+  :ensure t
+  :bind ("C-@" . er/expand-region))
 
 (use-package gtags
   :ensure t
@@ -392,8 +395,6 @@
   (TeX-source-correlate-mode 1)
   (TeX-fold-mode 1))
 
-;; we want a couple of sane defaults
-;; (org-babel-load-file "~/.emacs.d/peoplesEmacs/sanity.org")
 
 ;; ;; we want a nice layout
 ;; (org-babel-load-file "~/.emacs.d/peoplesEmacs/layout.org")
