@@ -358,6 +358,10 @@
   :ensure t
   :delight)
 
+(use-package ranger
+  :ensure t
+  :bind ("C-x r r" . ranger))
+
 ;;; Langs and major modes-etc
 
 (use-package latex-math-preview
