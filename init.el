@@ -454,7 +454,14 @@
 
 ;; TODO
 (use-package multiple-cursors
-  :ensure t)
+  :ensure t
+  :delight
+  :config
+  :hook ((prog-mode text-mode) . multiple-cursors-mode)
+  :bind
+  ("C->" . mc/mark-next-like-this)
+  ("C-<" . mc/mark-previous-like-this)
+  ("C-c C-<" . mc/mark-all-like-this))
 
 (use-package smartparens
   :ensure t)
@@ -470,10 +477,22 @@
   :bind ("C-x r r" . ranger))
 
 (use-package emms
-  :ensure t)
+  :ensure t
+  :config
+  (require 'emms-setup)
+  (emms-add-directory-tree "~/music")
+  (emms-all)
+  (emms-default-players))
 
 (use-package gist
   :ensure t)
+
+(use-package multi-term
+  :ensure t
+  :config
+  (setq multi-term-dedicated-skip-other-window-p t)
+  (setq multi-term-dedicated-select-after-open-p t)
+  :bind ("C-S-t" . multi-term))
 
 (use-package dashboard
   :ensure t
