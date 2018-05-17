@@ -399,10 +399,6 @@
   (TeX-source-correlate-mode 1)
   (TeX-fold-mode 1))
 
-
-;; ;; we want a nice layout
-;; (org-babel-load-file "~/.emacs.d/peoplesEmacs/layout.org")
-
 ;; ;; langtools
 ;; (org-babel-load-file "~/.emacs.d/peoplesEmacs/langsupport.org")
 
@@ -419,9 +415,9 @@
 ;; (org-babel-load-file "~/.emacs.d/peoplesEmacs/org.org")
 
 ;; ;; notmuch configuration
-;; (use-package notmuch
-;;   :ensure t
-;;   :config (org-babel-load-file "~/.emacs.d/private/notmuch.org"))
+(use-package notmuch
+  :ensure t
+  :config (org-babel-load-file "~/.emacs.d/private/notmuch.org"))
 
 ;; (provide 'init)
 ;;; init.el ends here
