@@ -341,6 +341,78 @@
     :ensure t
     :delight
     :hook ((prog-mode) . aggressive-indent-mode)))
+ 
+
+(defun peoplesEmacs/core/visuals ()
+  (show-paren-mode t)
+  (use-package nlinum-relative
+    :ensure t
+    :delight
+    :hook ((prog-mode text-mode) . nlinum-relative-mode))
+  (use-package beacon
+    :ensure t
+    :delight
+    :hook ((prog-mode text-mode) . beacon-mode))
+  (column-number-mode t)
+  (line-number-mode -1)
+  (use-package whitespace
+    :diminish ""
+    :ensure t
+    :config
+    (custom-set-variables
+     '(whitespace-style
+       '(face trailing tabs))))
+  (add-hook 'text-mode-hook 'whitespace-mode)
+  (add-hook 'prog-mode-hook 'whitespace-mode)
+  (use-package highlight-symbol
+    :ensure t
+    :diminish ""
+    :config
+    (add-hook 'prog-mode-hook 'highlight-symbol-mode)
+    (setq highlight-symbol-idle-delay 0.5))
+  (setq truncate-partial-width-windows nil)
+  (setq word-wrap t)
+  (size-indication-mode t)
+  (use-package paren
+    :diminish ""
+    :ensure t
+    :init (show-paren-mode 1)
+    :config
+    (setq-default show-paern-delay nil)
+    (set-face-background 'show-paren-match "yellow")
+    (set-face-foreground 'show-paren-match "purple")
+					;(set-face-attribute 'show-paren-match-face :weight 'extra-bold)
+    )
+  (use-package rainbow-mode
+    :diminish ""
+    :ensure t
+    :config
+    (add-hook 'text-mode-hook 'rainbow-mode)
+    (add-hook 'prog-mode-hook 'rainbow-mode)
+					;(add-hook 'special-mode-hook 'rainbow-mode)
+    )
+  (use-package rainbow-delimiters
+    :diminish ""
+    :ensure t
+    :hook (prog-mode . rainbow-delimiters-mode)
+    :config
+    (custom-set-faces
+     '(rainbow-delimiters-depth-1-face ((t (:foreground "blue" :height 1.0))))
+     '(rainbow-delimiters-depth-2-face ((t (:foreground "green" :height 1.0))))
+     '(rainbow-delimiters-depth-3-face ((t (:foreground "yellow" :height 1.0))))
+     '(rainbow-delimiters-depth-4-face ((t (:foreground "violet" :height 1.0))))
+     '(rainbow-delimiters-depth-5-face ((t (:foreground "red"))))
+     '(rainbow-delimiters-depth-6-face ((t (:foreground "orange"))))
+     '(rainbow-delimiters-depth-7-face ((t (:foreground "cyan"))))
+     '(rainbow-delimiters-depth-8-face ((t (:foreground "black" :height 1.0))))
+     '(rainbow-delimiters-mismatch-face ((t (:foreground "red" :height 1.0))))
+     '(rainbow-delimiters-unmatched-face ((t (:foreground "red" :height 1.0)))))))
+;; TODO speedbar configuration
+;; (use-package minimap
+;;   :ensure t
+;;   :bind ([f7] . minimap-mode))
+;;
+
 
 (defun peoplesEmacs/core/navigationAndWindowing ()
   (winner-mode t))
