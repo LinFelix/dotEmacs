@@ -170,7 +170,11 @@
     (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
     (add-hook 'company-completion-cancelled-hook
 	      'company-maybe-turn-on-fci))
-  ()
+  (use-package company-quickhelp
+    :ensure t
+    :delight
+    :after (company)
+    :config (setq company-quickhelp-delay 0.3))
   (use-package company-statistics
     :ensure t
     :defer t
@@ -572,14 +576,11 @@
 
 
 (use-package calfw
-  :ensure t
-  :init ((use-package calfw-org
-	   :ensure t)
-	 (use-package calfw-cal
-	   :ensure t))
-  :config
-  (require 'calfw-org)
-  (require 'calfw-cal))
+  :ensure t)
+(use-package calfw-org
+  :ensure t)
+(use-package calfw-cal
+  :ensure t)
 (calendar-set-date-style 'iso)
 (setq org-src-fontify-natively t)
 (org-babel-do-load-languages
@@ -608,8 +609,6 @@
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c A") (kbd "C-c a a"))
 ;;; Langs and major modes-etc
-(use-package ob-python
-  :ensure t)
 (use-package elpy
   :ensure t
   :delight)
