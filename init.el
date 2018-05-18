@@ -77,16 +77,30 @@
     :config
     (delight '((emacs-lisp-mode "ξ")
 	       (eldoc-mode nil "eldoc")
-	       (hs-minor-mode nil "hs"))))
+	       (hs-minor-mode nil "hideshow"))))
   (blink-cursor-mode 0))
 
 (defun peoplesEmacs/core/checkers ()
-  "Text."
-  nil)
+  (use-package flycheck
+    :ensure t
+    :init (global-flycheck-mode t)
+    :hook (prog-mode . flycheck-mode))
+  (use-package flycheck-pos-tip
+    :ensure t
+    :after (flycheck)
+					;:config (flycheck-pos-tip-mode)
+    :hook (prog-mode . flycheck-pos-tip-mode))
+  )
 
 (defun _peoplesEmacs/core/vc ()
   "Text."
-  nil)
+  (global-set-key (kbd "C-x G") 'vc-diff)
+  (use-package diff-hl
+    :ensure t
+    :delight
+    :hook ((prog-mode org-mode) . (lambda ()
+				    (diff-hl-mode)
+				    (diff-hl-flydiff-mode)))))
 
 (defun peoplesEmacs/core/projects ()
   "Projectmanagement configuration."
@@ -103,7 +117,6 @@
     :init (helm-projectile-on))
   (global-ede-mode t)
   (_peoplesEmacs/core/vc)
-  (semantic-mode t)
   (use-package neotree
     :ensure t
     :after (projectile)
@@ -136,12 +149,33 @@
     :ensure t
     :delight "g"
     :hook (c-mode c++-mode java-mode perl-mode cperl-mode awk-mode asm-mode cobol-mode csharp-mode erlang-mode f90-mode fortran-mode javascript-mode lua-mode pascal-mode clisp-mode python-mode ruby-mode octave-mode scheme-mode lisp-mode tex-mode latex-mode vimrc-mode) . 'ggtags-mode)
+  (defvar-local company-fci-mode-on-p nil)
+
+  (defun company-turn-off-fci (&rest ignore)
+    (when (boundp 'fci-mode)
+      (setq company-fci-mode-on-p fci-mode)
+      (when fci-mode (fci-mode -1))))
+  (defun company-maybe-turn-on-fci (&rest ignore)
+    (when company-fci-mode-on-p (fci-mode 1)))
   (use-package company
     ;; TODO requires more configuration
     :after (ggtags)
     :ensure t
     :delight "cc"
-    :config (global-company-mode t))
+    :config (global-company-mode t)
+    (setq company-minimum-prefix-length 0)
+    (setq company-idle-delay 0.2)
+    (add-hook 'after-init-hook 'global-company-mode)
+    (add-hook 'company-completion-started-hook 'company-turn-off-fci)
+    (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
+    (add-hook 'company-completion-cancelled-hook
+	      'company-maybe-turn-on-fci))
+  ()
+  (use-package company-statistics
+    :ensure t
+    :defer t
+    :delight
+    :config (company-statistics-mode))
   (use-package auto-complete
     :ensure t
     :delight "ac")
@@ -158,7 +192,17 @@
     (setq-default yas-prompt-functions '(yas-completing-prompt))
     :config
     (setq yas-triggers-in-field t
-	  yas-wrap-around-region t))
+	  yas-wrap-around-region t)
+    (add-to-list 'yas/root-directory "~/.emacs.d/snippets/yasnippet-snippets")
+    (yas/initialize)
+    (setq-default yas-prompt-functions '(yas-completing-prompt))
+    :config
+    (setq yas-triggers-in-field t
+	  yas-wrap-around-region t)
+    (use-package helm-c-yasnippet
+      :ensure t
+      :config (setq helm-yas-space-match-any-greedy t)
+      :bind ("<print> n" . helm-yas-complete)))
   (use-package helm
     :delight helm-mode
     :ensure t
@@ -449,6 +493,25 @@
 (peoplesEmacs/core/completion)
 (peoplesEmacs/core/visuals)
 
+
+;; hookedi hook
+(setq-local eldoc-documentation-function #'ggtags-eldoc-function)
+(add-hook 'prog-mode-hook #'(lambda ()
+			      (helm-gtags-mode)
+			      (semantic-mode)
+			      (auto-fill-mode)))
+(global-set-key (kbd "<f9>") 'ispell-word)
+(global-set-key (kbd "<f12>") 'ispell-buffer)
+(global-set-key (kbd "C-<f12>") 'flyspell-buffer)
+(with-eval-after-load "ispell"
+  (setq ispell-program-name "hunspell")
+  (setq ispell-dictionary "english,german8")
+  (ispell-set-spellchecker-params)
+  (ispell-hunspell-add-multi-dic "english,german8"))
+(add-hook 'text-mode-hook 'flyspell-mode)
+(global-set-key (kbd "<f10>") 'edebug-set-breakpoint)
+
+
 (use-package dictcc
   :ensure t)
 
@@ -501,13 +564,59 @@
 					;(setq dashboard-banner-logo-title "")
 					;(setq dashboard-startup-banner nil)
 					;
-  ;; (setq dashboard-items '((agenda . 25)
-  ;; 			  (projects .7)
-  ;; 			  (bookmarks .12)
-  ;; 			  (recents . 20))))
-  ;;   (add-to-list 'dashboard-items '(agenda) t)
+;; (setq dashboard-items '((agenda . 25)
+;; 			  (projects .7)
+;; 			  (bookmarks .12)
+;; 			  (recents . 20))))
+;;   (add-to-list 'dashboard-items '(agenda) t)
 
+
+(use-package calfw
+  :ensure t
+  :init ((use-package calfw-org
+	   :ensure t)
+	 (use-package calfw-cal
+	   :ensure t))
+  :config
+  (require 'calfw-org)
+  (require 'calfw-cal))
+(calendar-set-date-style 'iso)
+(setq org-src-fontify-natively t)
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)
+   (ipython . t)
+   (octave . t)
+   (haskell . t)
+   (maxima . t)
+   (fortran . t)))
+(setq  org-confirm-babel-evaluate 'nil)
+(push 'company-capf company-backends)
+(defun my-org-mode-hook ()
+  (add-hook 'completion-at-point-functions 'pcomplete-completions-at-point nil t))
+(add-hook 'org-mode-hook #'my-org-mode-hook)
+(setq org-log-done t)
+(org-babel-load-file "~/.emacs.d/personal/personal-org-mode-config.org")
+(setq org-enforce-todo-dependencies t)
+(setq org-enforce-todo-checkbox-dependencies t)
+(setq org-agenda-skip-scheduled-if-deadline-is-shown nil)
+(setq org-agenda-skip-scheduled-if-done t)
+(setq org-agenda-skip-deadline-if-done t)
+(setq org-agenda-skip-deadline-prewarning-if-scheduled nil)
+(setq org-agenda-skip-timestamp-if-deadline-is-shown nil)
+(setq org-agenda-skip-timestamp-if-done t)
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c A") (kbd "C-c a a"))
 ;;; Langs and major modes-etc
+(use-package ob-python
+  :ensure t)
+(use-package elpy
+  :ensure t
+  :delight)
+(use-package py-autopep8
+  :ensure t
+  :delight)
+
 
 (use-package latex-math-preview
   :ensure t
@@ -544,22 +653,6 @@
   (TeX-source-correlate-mode 1)
   (TeX-fold-mode 1))
 
-;; ;; langtools
-;; (org-babel-load-file "~/.emacs.d/peoplesEmacs/langsupport.org")
-
-;; ;; langs
-;; (org-babel-load-file "~/.emacs.d/peoplesEmacs/langs.org")
-
-;; ;; completion
-;; (org-babel-load-file "~/.emacs.d/peoplesEmacs/completions.org")
-
-;; ;; otter tools
-;; (org-babel-load-file "~/.emacs.d/peoplesEmacs/otters.org")
-
-;; ;; org
-;; (org-babel-load-file "~/.emacs.d/peoplesEmacs/org.org")
-
-;; ;; notmuch configuration
 (use-package notmuch
   :ensure t
   :config (org-babel-load-file "~/.emacs.d/private/notmuch.org"))
