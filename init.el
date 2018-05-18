@@ -248,13 +248,12 @@
     (which-key-setup-minibuffer)
     (setq which-key-idle-delay 0.2)
     (setq which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
-    (add-hook 'after-init-hook (
-  				lambda ()
-  				;; this is a work around because which
-  				;; key wasn't showing
-  				;; »Did you try turning it of on again
-  				(which-key-mode -1)
-				(which-key-mode t)))
+    (add-hook 'after-init-hook (lambda ()
+  				 ;; this is a work around because which
+  				 ;; key wasn't showing
+  				 ;; »Did you try turning it of on again
+  				 (which-key-mode -1)
+				 (which-key-mode t)))
     (setq which-key-paging-prefixes '("C-x"))
     (setq which-key-paging-prefixes '("C-c"))
     (setq which-key-paging-key "M-ß")))
@@ -274,7 +273,6 @@
   ;; here:
   ;; https://emacs.stackexchange.com/questions/5828/why-do-i-have-to-add-each-package-to-load-path-or-problem-with-require-packag
   ;; https://github.com/jwiegley/use-package/issues/275
-  
   (package-initialize)
   (require 'package)
   (setq package-archives
@@ -284,7 +282,7 @@
           ("marmalade" . "https://marmalade-repo.org/packages/"))))
   (when (not (require 'use-package nil 'noerror))
 
-    ;; Enabling the following 
+    ;; Enabling the following
     (package-refresh-contents)
     (package-install 'use-package))
   (use-package auto-package-update
@@ -302,7 +300,7 @@
   (global-set-key (kbd "C-ö g") 'magit-status)
   (global-set-key (kbd "C-f") 'isearch-forward)
   (global-set-key (kbd "C-ä") mode-specific-map)
-  (define-key isearch-mode-map "\C-f" 'isearch-repeat-forward) 
+  (define-key isearch-mode-map "\C-f" 'isearch-repeat-forward)
   (global-set-key (kbd "C-s") 'save-buffer)
 					;(use-package evil
 					;  :ensure t
@@ -312,7 +310,6 @@
 
 (defun peoplesEmacs/core/no-clutter ()
   (setq custom-file "~/customize")
-  
   (let '(tmp_dir "~/cacheAndTmp/emacs_auto_save")
     '((setq backup-directory-alist
             '((".*" . ,"~/cacheAndTmp/emacs_auto_save")))
@@ -320,12 +317,12 @@
             '((".*" ,tmp_dir)))
       (setq auto-save-list-file-prefix tmp_dir))))
 
-(defun peoplesEmacs/core/theme () 
+(defun peoplesEmacs/core/theme ()
   "Eventually replace by own theme."
   (use-package monokai-theme
     :ensure t
     :config
-    (load-theme 'monokai t t) 
+    (load-theme 'monokai t t)
     (set-background-color "black")
     (custom-set-faces
      '(font-lock-comment-face ((t (:background "#202020" :foreground "#75715E")))))))
@@ -425,6 +422,10 @@
        '(face trailing tabs))))
   (add-hook 'text-mode-hook 'whitespace-mode)
   (add-hook 'prog-mode-hook 'whitespace-mode)
+  (use-package ws-trim
+    :ensure t
+    :delight
+    :config (global-ws-trim-mode t))
   (use-package highlight-symbol
     :ensure t
     :diminish ""
@@ -534,7 +535,7 @@
 ;; https://github.com/flycheck/flycheck-color-mode-line
 ;; https://github.com/milkypostman/powerline
 ;; https://emacs.stackexchange.com/questions/13836/how-to-abbreviate-version-control-information-in-the-mode-line
-;; 
+;; https://www.emacswiki.org/emacs/ModeLineConfiguration
 
 
 (use-package dictcc
@@ -655,7 +656,6 @@
   (setq-default TeX-electric-math '("$" . "$"))
   (setq-default TeX-electric-sub-and-superscript t)
   (setq-default LaTeX-electric-left-right-brace t)
-  
   ;; (add-hook 'LaTeX-mode-hook '(lambda ()
   ;; 				(TeX-PDF-mode 1)
   ;; 				(TeX-source-correlate-mode 1)
