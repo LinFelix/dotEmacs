@@ -173,7 +173,7 @@
   (use-package company-quickhelp
     :ensure t
     :delight
-    :after (company)
+    :after (company)  ;; TODO in the future confige the colors
     :config (setq company-quickhelp-delay 0.3))
   (use-package company-statistics
     :ensure t
@@ -225,7 +225,6 @@
     ("C-x b" . helm-for-files)
     ("M-f" . helm-occur)
     ("M-F" . helm-projectile-grep))
-
   ;; which-key # shows the following possible key strokes and what they do
   (use-package which-key
     :delight
@@ -516,6 +515,14 @@
 (global-set-key (kbd "<f10>") 'edebug-set-breakpoint)
 
 
+;;; Future projects build your own mode line
+;; inspriation from:
+;; https://github.com/flycheck/flycheck-color-mode-line
+;; https://github.com/milkypostman/powerline
+;; https://emacs.stackexchange.com/questions/13836/how-to-abbreviate-version-control-information-in-the-mode-line
+;; 
+
+
 (use-package dictcc
   :ensure t)
 
@@ -597,7 +604,7 @@
   (add-hook 'completion-at-point-functions 'pcomplete-completions-at-point nil t))
 (add-hook 'org-mode-hook #'my-org-mode-hook)
 (setq org-log-done t)
-(org-babel-load-file "~/.emacs.d/personal/personal-org-mode-config.org")
+					;(org-babel-load-file "~/.emacs.d/personal/personal-org-mode-config.org")
 (setq org-enforce-todo-dependencies t)
 (setq org-enforce-todo-checkbox-dependencies t)
 (setq org-agenda-skip-scheduled-if-deadline-is-shown nil)
