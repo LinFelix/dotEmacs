@@ -52,9 +52,10 @@
     :delight
     :init (recentf-mode t)
     :config
-    (add-to-list 'recentf-exclude "~/.emacs.d/games/*")
-    (add-to-list 'recentf-exclude "~/.emacs.d/elpa/*")
-    (add-to-list 'recentf-exclude "\\\*Org Src *.org\[ * \]\*")))
+    (add-to-list 'recentf-exclude "\\~/.emacs.d/games/*\\")
+    (add-to-list 'recentf-exclude "\\~/.emacs.d/elpa/*\\")
+    (add-to-list 'recentf-exclude "\\\*Org Src *.org\[ * \]\*")
+    (add-to-list 'recentf-exclude "~/.emacs.d/emms/history")))
 
 (defun peoplesEmacs/core/no-prompts ()
   "There are annoying prompts in Emacs.
@@ -78,7 +79,7 @@
     (delight '((emacs-lisp-mode "ξ")
 	       (eldoc-mode nil "eldoc")
 	       (hs-minor-mode nil "hideshow")
-	       (helm-gtags-mode  nil "helm")
+	       (helm-gtags-mode  nil "helm-gtags")
 	       (auto-fill-function nil t))))
   (blink-cursor-mode 0))
 
@@ -239,6 +240,10 @@
     ("C-x b" . helm-for-files)
     ("M-f" . helm-occur)
     ("M-F" . helm-projectile-grep))
+  (use-package helm-descbinds
+    :ensure t
+    :bind ("C-h b" . helm-descbinds)
+    )
   ;; which-key # shows the following possible key strokes and what they do
   (use-package which-key
     :delight
