@@ -178,6 +178,11 @@
     (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
     (add-hook 'company-completion-cancelled-hook
 	      'company-maybe-turn-on-fci))
+  (use-package company-flx
+    :ensure t
+    :delight
+    :after (company)
+    :hook (company-mode . company-flx-mode))
   (use-package company-quickhelp
     :ensure t
     :delight
@@ -220,6 +225,7 @@
     :ensure t
     :init (helm-mode t)
     :config
+    (setq-default helm-mode-fuzzy-match t)
     (setq helm-autoresize-mode 1)
     (setq helm-autoresize-min-height 0)
     (setq helm-autoresize-max-height 80)
