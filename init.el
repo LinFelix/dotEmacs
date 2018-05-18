@@ -399,9 +399,14 @@
     :ensure t
     :delight
     :hook ((prog-mode) . aggressive-indent-mode)))
- 
 
 (defun peoplesEmacs/core/visuals ()
+  (global-prettify-symbols-mode)
+  (custom-set-variables
+   '(company-quickhelp-color-background "black")
+   '(company-quickhelp-color-foreground "medium blue")
+   '(company-quickhelp-delay 0.3))
+  (custom-set-faces'(flycheck-error ((t (:underline (:color "#F92672" :style wave))))))
   (show-paren-mode t)
   (use-package nlinum-relative
     :ensure t
@@ -586,16 +591,13 @@
 (use-package dashboard
   :ensure t
   :config
-  (dashboard-setup-startup-hook))
-					;(setq dashboard-banner-logo-title "")
-					;(setq dashboard-startup-banner nil)
-					;
-;; (setq dashboard-items '((agenda . 25)
-;; 			  (projects .7)
-;; 			  (bookmarks .12)
-;; 			  (recents . 20))))
-;;   (add-to-list 'dashboard-items '(agenda) t)
-
+  (dashboard-setup-startup-hook)
+  (setq dashboard-banner-logo-title "")
+  (setq dashboard-startup-banner nil)
+  (setq dashboard-items '((bookmarks .12)
+			  (projects .7)
+			  (recents . 20)
+			  (agenda . 25))))
 
 (use-package calfw
   :ensure t)
