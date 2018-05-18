@@ -31,7 +31,6 @@
 (defgroup peoplesEmacs/core nil
   "The core configurations"
   :group 'peoplesEmacs)
-
 (defcustom peoplesEmacs/core/neo-layout-used? t
   "Should adjustment for the neo2 keyboard layout be made?"
   :type 'boolean
@@ -171,8 +170,8 @@
     :after (ggtags)
     :ensure t
     :delight "cc"
-    :config (global-company-mode t)
-    (setq company-minimum-prefix-length 0)
+    :config ;(global-company-mode t)
+    (setq company-minimum-prefix-length 1)
     (setq company-idle-delay 0.2)
     (add-hook 'after-init-hook 'global-company-mode)
     (add-hook 'company-completion-started-hook 'company-turn-off-fci)
@@ -180,7 +179,9 @@
 	      'company-maybe-turn-on-fci)
     (add-hook 'company-completion-cancelled-hook
 	      'company-maybe-turn-on-fci)
-    (push 'company-capf company-backends))
+    (push 'company-capf company-backends)
+    (setq company-auto-complete 'company-explicit-action-p)
+    (setq company-auto-select-first-candidate nil))
   (use-package company-flx
     :ensure t
     :delight
@@ -249,6 +250,7 @@
     )
   ;; which-key # shows the following possible key strokes and what
   ;; they do
+  
   (use-package which-key
     :delight
     :ensure t
@@ -311,11 +313,11 @@
   (global-set-key (kbd "C-ä") mode-specific-map)
   (define-key isearch-mode-map "\C-f" 'isearch-repeat-forward)
   (global-set-key (kbd "C-s") 'save-buffer)
-					;(use-package evil
-					;  :ensure t
-					;  ;:config
-					;  ))
-  )
+  (use-package evil
+    :ensure t
+    :config
+    (evil-mode)
+    (setq evil-default-state 'emacs)))
 
 (defun peoplesEmacs/core/no-clutter ()
   (setq custom-file "~/customize")
@@ -347,13 +349,15 @@
 
 (setq-default blubb
 	      '((name . "Helm at the Emacs")
-		(candidates . ("Office Code Pro 8" "Go MONO
-		8" "GO 8" "Hack 8" "Monaco 8" "Fira-Mono
-		8" "Fira-Mono Code 8" "Office Code Pro 11" "Go
-		MONO 11" "GO 11" "Hack 11" "Monaco 11" "Fira-Mono
-		11" "Fira-Mono Code 11" "Office Code Pro 14" "Go
-		MONO 14" "GO 14" "Hack 14" "Monaco 14" "Fira-Mono
-		14" "Fira-Mono Code 14"))
+		(candidates . ("Office Code Pro 9" "Go MONO 9" "GO 9"
+			       "Hack 9" "Monaco 9" "Fira-Mono 9"
+			       "Fira-Mono Code 9" "Office Code Pro 12"
+			       "Go MONO 12" "GO 12" "Hack 12"
+			       "Monaco 12" "Fira-Mono 12"
+			       "Fira-Mono Code 12"
+			       "Office Code Pro 15" "Go	MONO 15"
+			       "GO 15" "Hack 15" "Monaco 15"
+			       "Fira-Mono 15" "Fira-Mono Code 15"))
 		(action . (lambda (candidate)
 			    (set-frame-font candidate nil t)))))
 
@@ -379,7 +383,7 @@
    hack - https://github.com/source-foundry/Hack"
   ;; (set-frame-font "Office Code Pro" nil t)
   ;; (set-frame-font "Go MONO" nil t)
-  (set-frame-font "Go MONO 8" nil t)
+  (set-frame-font "Go MONO 9" nil t)
   (use-package fill-column-indicator
     :delight
     :ensure t
@@ -616,39 +620,65 @@
 			  (recents . 20)
 			  (agenda . 25))))
 
-(use-package calfw
+(use-package hackernews
   :ensure t)
-(use-package calfw-org
+
+(use-package md4rd
   :ensure t)
-(use-package calfw-cal
+
+(use-package helm-google
   :ensure t)
-(calendar-set-date-style 'iso)
-(setq org-src-fontify-natively t)
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((python . t)
-   (ipython . t)
-   (octave . t)
-   (haskell . t)
-   (maxima . t)
-   (fortran . t)))
-(setq  org-confirm-babel-evaluate 'nil)
-(defun my-org-mode-hook ()
-  (add-hook 'completion-at-point-functions
-	    'pcomplete-completions-at-point nil t))
-(add-hook 'org-mode-hook #'my-org-mode-hook)
-(setq org-log-done t)
-					;(org-babel-load-file "~/.emacs.d/personal/personal-org-mode-config.org")
-(setq org-enforce-todo-dependencies t)
-(setq org-enforce-todo-checkbox-dependencies t)
-(setq org-agenda-skip-scheduled-if-deadline-is-shown nil)
-(setq org-agenda-skip-scheduled-if-done t)
-(setq org-agenda-skip-deadline-if-done t)
-(setq org-agenda-skip-deadline-prewarning-if-scheduled nil)
-(setq org-agenda-skip-timestamp-if-deadline-is-shown nil)
-(setq org-agenda-skip-timestamp-if-done t)
-(global-set-key (kbd "C-c a") 'org-agenda)
-(global-set-key (kbd "C-c A") (kbd "C-c a a"))
+
+(use-package sx
+  :ensure t)
+
+(defun pE/org-config ()
+  "Configs for org-mode"
+  (use-package org-bullets
+    :ensure t
+    :init
+    (setq org-bullets-bullet-list
+	  '("◉" "◎" "<img draggable="false" class="emoji" alt="⚫" src="https://s0.wp.com/wp-content/mu-plugins/wpcom-smileys/twemoji/2/svg/26ab.svg">" "○" "►" "◇"))
+    ;; (setq org-todo-keywords '((sequence "☛ TODO(t)" "|" "<img draggable="false" class="emoji" alt="✔" src="https://s0.wp.com/wp-content/mu-plugins/wpcom-smileys/twemoji/2/svg/2714.svg"> DONE(d)")
+    ;; 			      (sequence "⚑ WAITING(w)" "|")
+    ;; 			      (sequence "|" "✘ CANCELED(c)")))
+    :hook (org-mode . org-bullets-mode))
+  (use-package calfw
+    :ensure t)
+  (use-package calfw-org
+    :ensure t)
+  (use-package calfw-cal
+    :ensure t)
+  (calendar-set-date-style 'iso)
+  (setq org-src-fontify-natively t)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)
+     (ipython . t)
+     (octave . t)
+     (haskell . t)
+     (maxima . t)
+     (fortran . t)))
+  (setq  org-confirm-babel-evaluate 'nil)
+  (defun my-org-mode-hook ()
+    (add-hook 'completion-at-point-functions
+	      'pcomplete-completions-at-point nil t))
+  (add-hook 'org-mode-hook #'my-org-mode-hook)
+  (setq org-log-done t)
+					;(org-babel-load-file
+					;"~/.emacs.d/personal/personal-org-mode-config.org")
+  
+  (setq org-enforce-todo-dependencies t)
+  (setq org-enforce-todo-checkbox-dependencies t)
+  (setq org-agenda-skip-scheduled-if-deadline-is-shown nil)
+  (setq org-agenda-skip-scheduled-if-done t)
+  (setq org-agenda-skip-deadline-if-done t)
+  (setq org-agenda-skip-deadline-prewarning-if-scheduled nil)
+  (setq org-agenda-skip-timestamp-if-deadline-is-shown nil)
+  (setq org-agenda-skip-timestamp-if-done t)
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  (global-set-key (kbd "C-c A") (kbd "C-c a a")))
+(pE/org-config)
 ;;; Langs and major modes-etc
 (use-package elpy
   :ensure t
