@@ -77,7 +77,9 @@
     :config
     (delight '((emacs-lisp-mode "ξ")
 	       (eldoc-mode nil "eldoc")
-	       (hs-minor-mode nil "hideshow"))))
+	       (hs-minor-mode nil "hideshow")
+	       (helm-gtags-mode  nil "helm")
+	       (auto-fill-function nil t))))
   (blink-cursor-mode 0))
 
 (defun peoplesEmacs/core/checkers ()
@@ -135,14 +137,20 @@
   ;; semantic config
   )
 
+(defun pE/helper/unfold-on-point ()
+  (yafolding-hide-parent-element)
+  (yafolding-toggle-element))
+
 (defun peoplesEmacs/core/folding ()
   (use-package yafolding
     :ensure t
     :delight
     :hook (prog-mode . yafolding-mode)
-    :bind ("<C-tab>" . hs-toggle-hiding))
-  (global-set-key (kbd "<C-tab>") 'hs-toggle-hiding)
-  (add-hook 'prog-mode-hook 'hs-minor-mode))
+					;:bind ("<C-tab>" . hs-toggle-hiding)
+    )
+					;(global-set-key (kbd "<C-tab>") 'hs-toggle-hiding)
+					;(add-hook 'prog-mode-hook 'hs-minor-mode)
+  (add-hook 'isearch-mode-end-hook 'pE/helper/unfold-on-point))
 
 (defun peoplesEmacs/core/completion ()
   (use-package ggtags
@@ -633,6 +641,7 @@
   :ensure auctex
   :mode ("\\.tex\\'" . TeX-mode)
   :config
+  (auto-fill-mode)
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
   (setq-default TeX-master t)
