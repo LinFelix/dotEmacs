@@ -151,7 +151,7 @@
     )
 					;(global-set-key (kbd "<C-tab>") 'hs-toggle-hiding)
 					;(add-hook 'prog-mode-hook 'hs-minor-mode)
-  (add-hook 'isearch-mode-end-hook 'pE/helper/unfold-on-point))
+  (add-hook 'isearch-mode-end-hook 'yafolding-show-element))
 
 (defun peoplesEmacs/core/completion ()
   (use-package ggtags
@@ -176,7 +176,8 @@
     (setq company-idle-delay 0.2)
     (add-hook 'after-init-hook 'global-company-mode)
     (add-hook 'company-completion-started-hook 'company-turn-off-fci)
-    (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
+    (add-hook 'company-completion-finished-hook
+	      'company-maybe-turn-on-fci)
     (add-hook 'company-completion-cancelled-hook
 	      'company-maybe-turn-on-fci))
   (use-package company-flx
@@ -187,7 +188,7 @@
   (use-package company-quickhelp
     :ensure t
     :delight
-    :after (company)  ;; TODO in the future confige the colors
+    :after (company) ;; TODO in the future confige the colors
     :config (setq company-quickhelp-delay 0.3))
   (use-package company-statistics
     :ensure t
@@ -199,7 +200,7 @@
     :delight "ac")
   ;; TODO automatic download new snippets and create them faster
   (use-package  yasnippet
-    :delight
+    :delight (yas-minor-mode nil "yasnippet")
     :ensure t
     :init
     (add-hook 'after-init-hook 'yas-global-mode)
@@ -244,7 +245,8 @@
     :ensure t
     :bind ("C-h b" . helm-descbinds)
     )
-  ;; which-key # shows the following possible key strokes and what they do
+  ;; which-key # shows the following possible key strokes and what
+  ;; they do
   (use-package which-key
     :delight
     :ensure t
@@ -330,19 +332,26 @@
     (load-theme 'monokai t t)
     (set-background-color "black")
     (custom-set-faces
-     '(font-lock-comment-face ((t (:background "#202020" :foreground "#75715E")))))))
+     '(font-lock-comment-face
+       ((t (:background "#202020" :foreground "#75715E")))))))
 
 (defun peoplesEmacs/helper/prog-mode-hl-line-mode ()
   "Enable a non-annoying hl-line-mode."
   (setq-default hl-line-range-function
-				#'(lambda () (save-excursion
-			         (cons (progn (beginning-of-visual-line) (point))
-				     (progn (end-of-visual-line) (point))))))
+		#'(lambda () (save-excursion
+			  (cons (progn (beginning-of-visual-line) (point))
+				(progn (end-of-visual-line) (point))))))
   (hl-line-mode))
 
 (setq-default blubb
 	      '((name . "Helm at the Emacs")
-		(candidates . ("Office Code Pro" "Go MONO" "GO" "Hack" "Monaco" "Fira-Mono" "Fira-Mono Code"))
+		(candidates . ("Office Code Pro 8" "Go MONO
+		8" "GO 8" "Hack 8" "Monaco 8" "Fira-Mono
+		8" "Fira-Mono Code 8" "Office Code Pro 11" "Go
+		MONO 11" "GO 11" "Hack 11" "Monaco 11" "Fira-Mono
+		11" "Fira-Mono Code 11" "Office Code Pro 14" "Go
+		MONO 14" "GO 14" "Hack 14" "Monaco 14" "Fira-Mono
+		14" "Fira-Mono Code 14"))
 		(action . (lambda (candidate)
 			    (set-frame-font candidate nil t)))))
 
@@ -368,7 +377,7 @@
    hack - https://github.com/source-foundry/Hack"
   ;; (set-frame-font "Office Code Pro" nil t)
   ;; (set-frame-font "Go MONO" nil t)
-  (set-frame-font "Hack" nil t)
+  (set-frame-font "Go MONO 8" nil t)
   (use-package fill-column-indicator
     :delight
     :ensure t
@@ -509,7 +518,8 @@
 (peoplesEmacs/core/setup-packages)
 (peoplesEmacs/core/no-fluff)
 (peoplesEmacs/core/use-utf-8)
-(when (eval peoplesEmacs/core/neo-layout-used?) (peoplesEmacs/core/use-neo-layout))
+(when (eval peoplesEmacs/core/neo-layout-used?)
+  (peoplesEmacs/core/use-neo-layout))
 (peoplesEmacs/core/no-clutter)
 (peoplesEmacs/core/history)
 (peoplesEmacs/core/theme)
@@ -623,7 +633,8 @@
 (setq  org-confirm-babel-evaluate 'nil)
 (push 'company-capf company-backends)
 (defun my-org-mode-hook ()
-  (add-hook 'completion-at-point-functions 'pcomplete-completions-at-point nil t))
+  (add-hook 'completion-at-point-functions
+	    'pcomplete-completions-at-point nil t))
 (add-hook 'org-mode-hook #'my-org-mode-hook)
 (setq org-log-done t)
 					;(org-babel-load-file "~/.emacs.d/personal/personal-org-mode-config.org")
