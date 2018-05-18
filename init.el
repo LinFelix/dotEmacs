@@ -179,7 +179,8 @@
     (add-hook 'company-completion-finished-hook
 	      'company-maybe-turn-on-fci)
     (add-hook 'company-completion-cancelled-hook
-	      'company-maybe-turn-on-fci))
+	      'company-maybe-turn-on-fci)
+    (push 'company-capf company-backends))
   (use-package company-flx
     :ensure t
     :delight
@@ -198,30 +199,31 @@
   (use-package auto-complete
     :ensure t
     :delight "ac")
+
   ;; TODO automatic download new snippets and create them faster
   (use-package  yasnippet
     :delight (yas-minor-mode nil "yasnippet")
     :ensure t
-    :init
-    (add-hook 'after-init-hook 'yas-global-mode)
-    (setq-default yas-snippet-dirs
-		  '("~/.emacs.d/snippets/yasnippet-snippets" ;; from AndreaCrotti/yasinppet-snippets
-		    "~/my_snippets" ;; my own snippets
-		    ))
-    (setq-default yas-prompt-functions '(yas-completing-prompt))
+    :hook ((prog-mode text-mode) . yas-minor-mode)
     :config
     (setq yas-triggers-in-field t
 	  yas-wrap-around-region t)
-    (add-to-list 'yas/root-directory "~/.emacs.d/snippets/yasnippet-snippets")
-    (yas/initialize)
     (setq-default yas-prompt-functions '(yas-completing-prompt))
-    :config
-    (setq yas-triggers-in-field t
-	  yas-wrap-around-region t)
-    (use-package helm-c-yasnippet
-      :ensure t
-      :config (setq helm-yas-space-match-any-greedy t)
-      :bind ("<print> n" . helm-yas-complete)))
+    :bind ("C-<tab>" . company-yasnippet)
+    ;;:init
+    ;; (setq-default yas-snippet-dirs
+    ;; 		  ;;from AndreaCrotti/yasinppet-snippets and my own snippets
+    ;; 		  '("~/.emacs.d/snippets/yasnippet-snippets/snippets" ;;
+    ;; 		    "~/my_snippets")))
+    )
+  (use-package yasnippet-snippets
+    :after yasnippet
+    :ensure t)
+  (use-package helm-c-yasnippet
+    :ensure t
+    :after (yasnippet)
+    :config (setq helm-yas-space-match-any-greedy t)
+    :bind ("<print> n" . helm-yas-complete))
   (use-package helm
     :delight helm-mode
     :ensure t
@@ -631,7 +633,6 @@
    (maxima . t)
    (fortran . t)))
 (setq  org-confirm-babel-evaluate 'nil)
-(push 'company-capf company-backends)
 (defun my-org-mode-hook ()
   (add-hook 'completion-at-point-functions
 	    'pcomplete-completions-at-point nil t))
