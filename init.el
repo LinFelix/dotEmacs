@@ -395,6 +395,16 @@
   (add-hook 'text-mode-hook #'hl-line-mode))
 
 (defun peoplesEmacs/core/editing ()
+  (use-package dashboard
+    :ensure t
+    :config
+    (dashboard-setup-startup-hook)
+    (setq dashboard-banner-logo-title "")
+    (setq dashboard-startup-banner nil)
+    (setq dashboard-items '((bookmarks .12)
+			    (projects .7)
+			    (recents . 20)
+			    (agenda . 25))))
   (delete-selection-mode t)
   (use-package undo-tree
     :diminish ""
@@ -563,7 +573,8 @@
   (ispell-hunspell-add-multi-dic "english,german8"))
 (add-hook 'text-mode-hook 'flyspell-mode)
 (global-set-key (kbd "<f10>") 'edebug-set-breakpoint)
-
+(use-package langtool
+  :ensure t)
 
 ;;; Future projects build your own mode line
 ;; inspriation from:
@@ -572,21 +583,7 @@
 ;; https://emacs.stackexchange.com/questions/13836/how-to-abbreviate-version-control-information-in-the-mode-line
 ;; https://www.emacswiki.org/emacs/ModeLineConfiguration
 
-
-(use-package dictcc
-  :ensure t)
-
 ;; TODO
-(use-package multiple-cursors
-  :ensure t
-  :delight
-  :config
-  :hook ((prog-mode text-mode) . multiple-cursors-mode)
-  :bind
-  ("C->" . mc/mark-next-like-this)
-  ("C-<" . mc/mark-previous-like-this)
-  ("C-c C-<" . mc/mark-all-like-this))
-
 (use-package smartparens
   :ensure t)
 
@@ -596,11 +593,25 @@
 (use-package move-text
   :ensure t)
 
+
+;;; Cool programs
+;; translation
+(use-package dictcc
+  :ensure t)
+
+;; ranger
 (use-package ranger
   :ensure t
   :bind ("C-x r r" . ranger))
 
+;; music
+(use-package spotify
+  :ensure t)
+(use-package helm-spotify-plus
+  :after (spotify)
+  :ensure t)
 (use-package emms
+  :defer t
   :ensure t
   :config
   (require 'emms-setup)
@@ -608,9 +619,11 @@
   (emms-all)
   (emms-default-players))
 
+;; automatic gists
 (use-package gist
   :ensure t)
 
+;; proper termial
 (use-package multi-term
   :ensure t
   :config
@@ -618,6 +631,7 @@
   (setq multi-term-dedicated-select-after-open-p t)
   :bind ("C-S-t" . multi-term))
 
+;; a dashboard
 (use-package dashboard
   :ensure t
   :config
@@ -629,15 +643,19 @@
 			  (recents . 20)
 			  (agenda . 25))))
 
+;; interface to hackernews
 (use-package hackernews
   :ensure t)
 
+;; interface to reddit
 (use-package md4rd
   :ensure t)
 
+;; easly google thigs
 (use-package helm-google
   :ensure t)
 
+;; interafce to the stackexchange network
 (use-package sx
   :ensure t)
 
