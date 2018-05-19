@@ -304,6 +304,12 @@
     (setq auto-package-update-hide-results t)
     (auto-package-update-maybe) ))
 
+(defun pE/toggle-inp ()
+  (interactive)
+  (if (equal default-input-method "chinese-py")
+      (toggle-input-method)
+    (set-input-method "chinese-py" t)))
+
 (defun peoplesEmacs/core/use-neo-layout ()
   "When using the neo2 keyboard layout a bunch of things are not
    where they are on querty/quertz.  So peoplesEmacs adapts."
@@ -314,6 +320,11 @@
   (global-set-key (kbd "C-ä") mode-specific-map)
   (define-key isearch-mode-map "\C-f" 'isearch-repeat-forward)
   (global-set-key (kbd "C-s") 'save-buffer)
+  (global-set-key (kbd "C-ö C-r") 'kill-buffer)
+  (define-prefix-command '计画)
+  (global-set-key (kbd "C-p") '计画)
+  (define-key 计画 (kbd "f") 'helm-projectile-find-file)
+  (define-key 计画 (kbd "F") 'helm-projectile-find-file-in-known-projects)
   (use-package evil
     :ensure t
     :config
