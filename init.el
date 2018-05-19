@@ -659,7 +659,64 @@
 (use-package sx
   :ensure t)
 
-(defun pE/org-config ()
+;; Database for peoples
+(use-package bbdb
+  :ensure t)
+
+;; RSS
+(use-package elfeed
+  :ensure t
+  :config (when (file-exists-p "~/.emacs.d/private/new_elfeed.el")
+	    (load "~/.emacs.d/private/new_elfeed.el")))
+
+;;; ########################
+;;; Langs and major modes-etc
+;;; #######################
+(use-package elpy
+  :ensure t
+  :delight)
+(use-package py-autopep8
+  :ensure t
+  :delight)
+
+
+(use-package latex-math-preview
+  :ensure t
+  :delight
+  :after (tex))
+
+(use-package tex
+  :ensure auctex
+  :mode ("\\.tex\\'" . TeX-mode)
+  :config
+  (auto-fill-mode)
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq-default TeX-master t)
+					;  (latex-preview-pane-enable)
+  (setq-default TeX-electric-math '("$" . "$"))
+  (setq-default TeX-electric-sub-and-superscript t)
+  (setq-default LaTeX-electric-left-right-brace t)
+  ;; (add-hook 'LaTeX-mode-hook '(lambda ()
+  ;; 				(TeX-PDF-mode 1)
+  ;; 				(TeX-source-correlate-mode 1)
+  ;; 				(TeX-fold-mode 1)))
+
+  ;; PDF Viewer
+
+  (add-to-list 'TeX-view-program-selection
+               '(output-pdf "Evince"))
+
+					;:hook
+  (setq fill-column 80)
+  (auto-fill-mode t)
+  (autopair-mode -1)
+  (TeX-PDF-mode 1)
+  (TeX-source-correlate-mode 1)
+  (TeX-fold-mode 1))
+
+;;; Org
+(defun pE/org/config ()
   "Configs for org-mode"
   (use-package org-bullets
     :ensure t
@@ -705,50 +762,11 @@
   (setq org-agenda-skip-timestamp-if-done t)
   (global-set-key (kbd "C-c a") 'org-agenda)
   (global-set-key (kbd "C-c A") (kbd "C-c a a")))
-(pE/org-config)
-;;; Langs and major modes-etc
-(use-package elpy
-  :ensure t
-  :delight)
-(use-package py-autopep8
-  :ensure t
-  :delight)
-
-
-(use-package latex-math-preview
-  :ensure t
-  :delight
-  :after (tex))
-
-(use-package tex
-  :ensure auctex
-  :mode ("\\.tex\\'" . TeX-mode)
-  :config
-  (auto-fill-mode)
-  (setq TeX-auto-save t)
-  (setq TeX-parse-self t)
-  (setq-default TeX-master t)
-					;  (latex-preview-pane-enable)
-  (setq-default TeX-electric-math '("$" . "$"))
-  (setq-default TeX-electric-sub-and-superscript t)
-  (setq-default LaTeX-electric-left-right-brace t)
-  ;; (add-hook 'LaTeX-mode-hook '(lambda ()
-  ;; 				(TeX-PDF-mode 1)
-  ;; 				(TeX-source-correlate-mode 1)
-  ;; 				(TeX-fold-mode 1)))
-
-  ;; PDF Viewer
-
-  (add-to-list 'TeX-view-program-selection
-               '(output-pdf "Evince"))
-
-					;:hook
-  (setq fill-column 80)
-  (auto-fill-mode t)
-  (autopair-mode -1)
-  (TeX-PDF-mode 1)
-  (TeX-source-correlate-mode 1)
-  (TeX-fold-mode 1))
+(pE/org/config)
+					;(pE/org/babel)
+					;(pE/org/agenda)
+					;(pE/org/export)
+					;(pE/org/capture
 
 (use-package notmuch
   :ensure t
