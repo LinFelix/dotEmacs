@@ -768,9 +768,99 @@
 					;(pE/org/export)
 					;(pE/org/capture
 
+;;; Email
 (use-package notmuch
   :ensure t
-  :config (org-babel-load-file "~/.emacs.d/private/notmuch.org"))
+  :config
+  (when (file-exists-p "~/.emacs.d/private/new_notmuch.el")
+    (load "~/.emacs.d/private/new_notmuch.el"))
+					; (org-babel-load-file "~/.emacs.d/private/notmuch.org")
+  (add-hook 'notmuch-hello-refresh-hook
+	    (lambda ()
+	      (if (and (eq (point) (point-min))
+		       (search-forward "Saved searches:" nil t))
+		  (progn
+		    (forward-line)
+		    (widget-forward 1))
+		(if (eq (widget-type (widget-at)) 'editable-field)
+		    (beginning-of-line)))))
+  ;; spamming
+  (define-key notmuch-show-mode-map "S"
+    (lambda ()
+      "toggle spam tag for message"
+      (interactive)
+      (if (member "spam" (notmuch-show-get-tags))
+	  (notmuch-show-tag (list "-spam" "+current"))
+	(notmuch-show-tag (list "+spam" "-current" "-unread")))))
+  (define-key notmuch-search-mode-map "S"
+    (lambda (beg end)
+      "toggle spam tag for message"
+      (interactive (notmuch-search-interactive-region))
+      (if (member "spam" (notmuch-show-get-tags))
+	  (notmuch-search-tag (list "-spam" "+current") beg end)
+	(notmuch-search-tag (list "+spam" "-current" "-unread") beg
+			    end))))
+  ;; arhiving
+  (define-key notmuch-show-mode-map "A"
+    (lambda ()
+      "toggle archive tag for message"
+      (interactive)
+      (if (member "current" (notmuch-show-get-tags))
+	  (notmuch-show-tag (list "-unread" "+current"))
+	(notmuch-show-tag (list "-current" "-unread")))))
+  (define-key notmuch-search-mode-map "A"
+    (lambda (beg end)
+      "toggle spam tag for message"
+      (interactive (notmuch-search-interactive-region))
+      (if (member "current" (notmuch-show-get-tags))
+	  (notmuch-search-tag (list "-unread" "+current") beg end)
+	(notmuch-search-tag (list "-current" "-unread") beg end))))
+  ;; for fsr
+  (define-key notmuch-show-mode-map "F"
+    (lambda ()
+      "toggle fsr tag for message"
+      (interactive)
+      (if (member "fsr" (notmuch-show-get-tags))
+	  (notmuch-show-tag (list "-unread" "+current"))
+	(notmuch-show-tag (list "-current" "-unread" "+fsr")))))
+  (define-key notmuch-search-mode-map "F"
+    (lambda (beg end)
+      "toggle fsr tag for message"
+      (interactive (notmuch-search-interactive-region))
+      (if (member "fsr" (notmuch-show-get-tags))
+	  (notmuch-search-tag (list "-unread" "+current") beg end)
+	(notmuch-search-tag (list "-current" "-unread" "+fsr") beg end))))
 
+  ;; for archiving
+  (define-key notmuch-show-mode-map "L"
+    (lambda ()
+      "toggle logs tag for message"
+      (interactive)
+      (if (member "logs" (notmuch-show-get-tags))
+	  (notmuch-show-tag (list "-unread" "+current"))
+	(notmuch-show-tag (list "-current" "-unread" "+logs")))))
+  (define-key notmuch-search-mode-map "L"
+    (lambda (beg end)
+      "toggle logs tag for message"
+      (interactive (notmuch-search-interactive-region))
+      (if (member "logs" (notmuch-show-get-tags))
+	  (notmuch-search-tag (list "-unread" "+current") beg end)
+	(notmuch-search-tag (list "-current" "-unread" "+logs") beg
+			    end))))
+  (setq sendmail-program "/usr/bin/msmtp")
+  (setq message-sendmail-extra-arguments '("--read-recipients"))
+  (setq message-send-mail-function 'message-send-mail-with-sendmail)
+					;     (setq message-sendmail-f-is-evil 't)
+  (setq mail-envelope-from 'header)
+  (setq message-sendmail-envelope-from 'header)
+  (setq mail-specify-envelope-from t)
+  (setq message-kill-buffer-on-exit t)
+  (add-hook 'message-setup-hook 'mml-secure-sign-pgpmime)
+
+  (eval-after-load 'Message
+    (lambda () (local-set-key (kbd "M-C-e") #'mml-secure-encrypt-pgpmime)))
+  (define-key notmuch-show-mode-map (kbd "C-c C-o") 'find-file-at-point))
+(use-package helm-notmuch
+  :ensure t)
 ;; (provide 'init)
 ;;; init.el ends here
