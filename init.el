@@ -191,7 +191,7 @@
     :ensure t
     :delight
     :after (company) ;; TODO in the future confige the colors
-    :config (setq company-quickhelp-delay 0.3)
+    :config (setq company-quickhelp-delay 0.1)
     :hook (company-mode . company-quickhelp-mode))
   (use-package company-statistics
     :ensure t
@@ -421,10 +421,19 @@
     :hook ((prog-mode) . aggressive-indent-mode)))
 
 (defun peoplesEmacs/core/visuals ()
+  (use-package webkit-color-picker
+    :ensure t)
+  (use-package highlight-indent-guides
+    :ensure t
+    :config (setq highlight-indent-guides-method 'character)
+    :hook (prog-mode . highlight-indent-guides-mode))
+  (use-package rainbow-identifiers
+    :ensure t
+    :hook (prog-mode . rainbow-identifiers-mode))
   (global-prettify-symbols-mode)
   (custom-set-variables
-   '(company-quickhelp-color-background "black")
-   '(company-quickhelp-color-foreground "medium blue")
+   '(company-quickhelp-color-background "#7c7c7c")
+   '(company-quickhelp-color-foreground "#00ff00")
    '(company-quickhelp-delay 0.3))
   (custom-set-faces'(flycheck-error ((t (:underline (:color "#F92672" :style wave))))))
   (show-paren-mode t)
