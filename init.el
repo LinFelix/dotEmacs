@@ -191,7 +191,8 @@
     :ensure t
     :delight
     :after (company) ;; TODO in the future confige the colors
-    :config (setq company-quickhelp-delay 0.3))
+    :config (setq company-quickhelp-delay 0.3)
+    :hook (company-mode . company-quickhelp-mode))
   (use-package company-statistics
     :ensure t
     :defer t
@@ -413,8 +414,7 @@
   (use-package paredit
     :delight
     :ensure t
-    :hook ((lisp-mode eval-expression-minibuffer-setup lisp-mode lisp-inetraction emacs-lisp-mode ielm-mode clojure-mode clojurec-mode clojurescript-mode common-lisp-mode slime-mode scheme-mode)
-	   . enable-paredit-mode))
+    :hook ((lisp-mode eval-expression-minibuffer-setup lisp-mode lisp-inetraction emacs-lisp-mode ielm-mode clojure-mode clojurec-mode clojurescript-mode common-lisp-mode slime-mode scheme-mode) . 'enable-paredit-mode))
   (use-package aggressive-indent
     :ensure t
     :delight
@@ -481,7 +481,7 @@
   (use-package rainbow-delimiters
     :diminish ""
     :ensure t
-    :hook (prog-mode . rainbow-delimiters-mode)
+    :hook ((prog-mode ielm-mode LaTeX-mode org-mode ipython-mode) . rainbow-delimiters-mode)
     :config
     (custom-set-faces
      '(rainbow-delimiters-depth-1-face ((t (:foreground "blue" :height 1.0))))

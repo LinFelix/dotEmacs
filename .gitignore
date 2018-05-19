@@ -59,3 +59,4 @@ ede-projects.el
 var/*
 eshell/*
 .sx/*
+flycheck_*
