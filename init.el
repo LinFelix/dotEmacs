@@ -362,14 +362,12 @@
 (setq-default blubb
 	      '((name . "Helm at the Emacs")
 		(candidates . ("Office Code Pro 9" "Go MONO 9" "GO 9"
-			       "Hack 9" "Monaco 9" "Fira-Mono 9"
-			       "Fira-Mono Code 9" "Office Code Pro 12"
-			       "Go MONO 12" "GO 12" "Hack 12"
-			       "Monaco 12" "Fira-Mono 12"
-			       "Fira-Mono Code 12"
-			       "Office Code Pro 15" "Go	MONO 15"
-			       "GO 15" "Hack 15" "Monaco 15"
-			       "Fira-Mono 15" "Fira-Mono Code 15"))
+			       "Hack 9" "Monaco 9" "Fira Mono 9"
+			       "Office Code Pro 12" "Go MONO 12"
+			       "GO 12" "Hack 12" "Monaco 12"
+			       "Fira Mono 12" "Office Code Pro 15"
+			       "Go MONO 15" "GO 15" "Hack 15"
+			       "Monaco 15" "Fira Mono 15"))
 		(action . (lambda (candidate)
 			    (set-frame-font candidate nil t)))))
 
@@ -395,7 +393,7 @@
    hack - https://github.com/source-foundry/Hack"
   ;; (set-frame-font "Office Code Pro" nil t)
   ;; (set-frame-font "Go MONO" nil t)
-  (set-frame-font "Go MONO 9" nil t)
+  (set-frame-font "Go MONO 11" nil t)
   (use-package fill-column-indicator
     :delight
     :ensure t
