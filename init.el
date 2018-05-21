@@ -416,6 +416,11 @@
 			    (projects .7)
 			    (recents . 20)
 			    (agenda . 25))))
+  (use-package hungry-delete
+    :ensure t
+    :delight hungry-delete-mode
+    :config
+    (global-hungry-delete-mode))
   (delete-selection-mode t)
   (use-package undo-tree
     :diminish ""
@@ -596,9 +601,6 @@
 
 ;; TODO
 (use-package smartparens
-  :ensure t)
-
-(use-package hungry-delete
   :ensure t)
 
 (use-package move-text
