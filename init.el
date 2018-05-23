@@ -169,6 +169,9 @@
       (when fci-mode (fci-mode -1))))
   (defun company-maybe-turn-on-fci (&rest ignore)
     (when company-fci-mode-on-p (fci-mode 1)))
+  (use-package helm-gtags
+    :ensure t
+    :after (helm ggtags))
   (use-package company
     ;; TODO requires more configuration
     :after (ggtags)
