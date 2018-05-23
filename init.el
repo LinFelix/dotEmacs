@@ -292,7 +292,8 @@
   ;; here:
   ;; https://emacs.stackexchange.com/questions/5828/why-do-i-have-to-add-each-package-to-load-path-or-problem-with-require-packag
   ;; https://github.com/jwiegley/use-package/issues/275
-  (package-initialize)
+  ;; This seems to be obsolete in version 27
+					;(package-initialize)
   (require 'package)
   (setq package-archives
         (quote
