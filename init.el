@@ -704,13 +704,7 @@
   (use-package ruby-mode
     :ensure t
     :mode "\\Vagrantfile\\'"  ; TODO include \\.rb\\' in the regex
-    :interpreter "ruby"
-    :functions inf-ruby-keys
-    :config
-    (defun my-ruby-mode-hook ()
-      (require 'inf-ruby)
-      (inf-ruby-keys))
-    (add-hook 'ruby-mode-hook 'my-ruby-mode-hook)))
+    :interpreter "ruby"))
 
 (defun pE/langs/devops/vagrant ()
   (use-package vagrant
