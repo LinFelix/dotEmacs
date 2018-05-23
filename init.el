@@ -685,16 +685,47 @@
   (global-set-key (kbd "C-c a") 'org-agenda)
   (global-set-key (kbd "C-c A") (kbd "C-c a a")))
 
-(defun pE/langs/yaml ())
+(defun pE/langs/yaml ()
+  (use-package yaml-mode
+    :ensure t)
+  (use-package flycheck-yamllint
+    :ensure t
+    :defer t
+    :init
+    (progn
+      (eval-after-load 'flycheck
+	'(add-hook 'flycheck-mode-hook 'flycheck-yamllint-setup)))))
 
-(defun pE/langs/ruby ())
+(defun pE/langs/ruby ()
+  (use-package ruby-electric
+    :ensure t)
+  (use-package inf-ruby
+    :ensure t)
+  (use-package ruby-mode
+    :ensure t
+    :mode "\\Vagrantfile\\'"  ; TODO include \\.rb\\' in the regex
+    :interpreter "ruby"
+    :functions inf-ruby-keys
+    :config
+    (defun my-ruby-mode-hook ()
+      (require 'inf-ruby)
+      (inf-ruby-keys))
+    (add-hook 'ruby-mode-hook 'my-ruby-mode-hook)))
 
 (defun pE/langs/devops/vagrant ()
-  (use-package Vagrant
+  (use-package vagrant
     :ensure t))
 
 (defun pE/langs/devops/ansible ()
-  )
+  (use-package ansible
+    :ensure t
+    :after (yasnippet auto-complete)
+    :hook (yaml-mode . (lambda () (ansible 1))))
+  (use-package company-ansible
+    :ensure t
+    :after ansible
+    :hook (yaml-mode . (lambda () (add-to-list 'company-backends
+					  '(company-ansible :with company-yasnippet))))))
 
 (defun pE/langs/devops ()
   (pE/langs/devops/vagrant)
@@ -730,6 +761,9 @@
 (peoplesEmacs/core/folding)
 (peoplesEmacs/core/completion)
 (peoplesEmacs/core/visuals)
+(pE/langs/yaml)
+(pE/langs/ruby)
+(pE/langs/devops)
 (pE/apps/org/config)
 ;;(pE/org/babel)
 ;;(pE/org/agenda)
