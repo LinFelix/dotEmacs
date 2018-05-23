@@ -542,6 +542,163 @@
   (winner-mode t))
 
 
+;;; Peoples Emacs applictaions
+(defun pE/apps/mail ()
+  (use-package notmuch
+    :ensure t
+    :config
+    (when (file-exists-p "~/.emacs.d/private/new_notmuch.el")
+      (load "~/.emacs.d/private/new_notmuch.el"))
+					; (org-babel-load-file "~/.emacs.d/private/notmuch.org")
+    (add-hook 'notmuch-hello-refresh-hook
+	      (lambda ()
+		(if (and (eq (point) (point-min))
+			 (search-forward "Saved searches:" nil t))
+		    (progn
+		      (forward-line)
+		      (widget-forward 1))
+		  (if (eq (widget-type (widget-at)) 'editable-field)
+		      (beginning-of-line)))))
+    ;; spamming
+    (define-key notmuch-show-mode-map "S"
+      (lambda ()
+	"toggle spam tag for message"
+	(interactive)
+	(if (member "spam" (notmuch-show-get-tags))
+	    (notmuch-show-tag (list "-spam" "+current"))
+	  (notmuch-show-tag (list "+spam" "-current" "-unread")))))
+    (define-key notmuch-search-mode-map "S"
+      (lambda (beg end)
+	"toggle spam tag for message"
+	(interactive (notmuch-search-interactive-region))
+	(if (member "spam" (notmuch-show-get-tags))
+	    (notmuch-search-tag (list "-spam" "+current") beg end)
+	  (notmuch-search-tag (list "+spam" "-current" "-unread") beg
+			      end))))
+    ;; arhiving
+    (define-key notmuch-show-mode-map "A"
+      (lambda ()
+	"toggle archive tag for message"
+	(interactive)
+	(if (member "current" (notmuch-show-get-tags))
+	    (notmuch-show-tag (list "-unread" "+current"))
+	  (notmuch-show-tag (list "-current" "-unread")))))
+    (define-key notmuch-search-mode-map "A"
+      (lambda (beg end)
+	"toggle spam tag for message"
+	(interactive (notmuch-search-interactive-region))
+	(if (member "current" (notmuch-show-get-tags))
+	    (notmuch-search-tag (list "-unread" "+current") beg end)
+	  (notmuch-search-tag (list "-current" "-unread") beg end))))
+    ;; for fsr
+    (define-key notmuch-show-mode-map "F"
+      (lambda ()
+	"toggle fsr tag for message"
+	(interactive)
+	(if (member "fsr" (notmuch-show-get-tags))
+	    (notmuch-show-tag (list "-unread" "+current"))
+	  (notmuch-show-tag (list "-current" "-unread" "+fsr")))))
+    (define-key notmuch-search-mode-map "F"
+      (lambda (beg end)
+	"toggle fsr tag for message"
+	(interactive (notmuch-search-interactive-region))
+	(if (member "fsr" (notmuch-show-get-tags))
+	    (notmuch-search-tag (list "-unread" "+current") beg end)
+	  (notmuch-search-tag (list "-current" "-unread" "+fsr") beg end))))
+
+    ;; for archiving
+    (define-key notmuch-show-mode-map "L"
+      (lambda ()
+	"toggle logs tag for message"
+	(interactive)
+	(if (member "logs" (notmuch-show-get-tags))
+	    (notmuch-show-tag (list "-unread" "+current"))
+	  (notmuch-show-tag (list "-current" "-unread" "+logs")))))
+    (define-key notmuch-search-mode-map "L"
+      (lambda (beg end)
+	"toggle logs tag for message"
+	(interactive (notmuch-search-interactive-region))
+	(if (member "logs" (notmuch-show-get-tags))
+	    (notmuch-search-tag (list "-unread" "+current") beg end)
+	  (notmuch-search-tag (list "-current" "-unread" "+logs") beg
+			      end))))
+    (setq sendmail-program "/usr/bin/msmtp")
+    (setq message-sendmail-extra-arguments '("--read-recipients"))
+    (setq message-send-mail-function 'message-send-mail-with-sendmail)
+					;     (setq message-sendmail-f-is-evil 't)
+    (setq mail-envelope-from 'header)
+    (setq message-sendmail-envelope-from 'header)
+    (setq mail-specify-envelope-from t)
+    (setq message-kill-buffer-on-exit t)
+    (add-hook 'message-setup-hook 'mml-secure-sign-pgpmime)
+
+    (eval-after-load 'Message
+      (lambda () (local-set-key (kbd "M-C-e") #'mml-secure-encrypt-pgpmime)))
+    (define-key notmuch-show-mode-map (kbd "C-c C-o") 'find-file-at-point))
+  (use-package helm-notmuch
+    :ensure t))
+
+(defun pE/apps/org/config ()
+  "Configs for org-mode"
+  (use-package org-bullets
+    :ensure t
+    :init
+    (setq org-bullets-bullet-list
+	  '("◉" "◎" "<img draggable="false" class="emoji" alt="⚫" src="https://s0.wp.com/wp-content/mu-plugins/wpcom-smileys/twemoji/2/svg/26ab.svg">" "○" "►" "◇"))
+    ;; (setq org-todo-keywords '((sequence "☛ TODO(t)" "|" "<img draggable="false" class="emoji" alt="✔" src="https://s0.wp.com/wp-content/mu-plugins/wpcom-smileys/twemoji/2/svg/2714.svg"> DONE(d)")
+    ;; 			      (sequence "⚑ WAITING(w)" "|")
+    ;; 			      (sequence "|" "✘ CANCELED(c)")))
+    :hook (org-mode . org-bullets-mode))
+  (use-package calfw
+    :ensure t)
+  (use-package calfw-org
+    :ensure t)
+  (use-package calfw-cal
+    :ensure t)
+  (calendar-set-date-style 'iso)
+  (setq org-src-fontify-natively t)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)
+     (ipython . t)
+     (octave . t)
+     (haskell . t)
+     (maxima . t)
+     (fortran . t)))
+  (setq  org-confirm-babel-evaluate 'nil)
+  (defun my-org-mode-hook ()
+    (add-hook 'completion-at-point-functions
+	      'pcomplete-completions-at-point nil t))
+  (add-hook 'org-mode-hook #'my-org-mode-hook)
+  (setq org-log-done t)
+					;(org-babel-load-file
+					;"~/.emacs.d/personal/personal-org-mode-config.org")
+  
+  (setq org-enforce-todo-dependencies t)
+  (setq org-enforce-todo-checkbox-dependencies t)
+  (setq org-agenda-skip-scheduled-if-deadline-is-shown nil)
+  (setq org-agenda-skip-scheduled-if-done t)
+  (setq org-agenda-skip-deadline-if-done t)
+  (setq org-agenda-skip-deadline-prewarning-if-scheduled nil)
+  (setq org-agenda-skip-timestamp-if-deadline-is-shown nil)
+  (setq org-agenda-skip-timestamp-if-done t)
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  (global-set-key (kbd "C-c A") (kbd "C-c a a")))
+
+(defun pE/langs/yaml ())
+
+(defun pE/langs/ruby ())
+
+(defun pE/langs/devops/vagrant ()
+  (use-package Vagrant
+    :ensure t))
+
+(defun pE/langs/devops/ansible ()
+  )
+
+(defun pE/langs/devops ()
+  (pE/langs/devops/vagrant)
+  (pE/langs/devops/ansible))
 ;;;  #################################################################
 ;;;                                                                  #
 ;;;  Config:                                                         #
@@ -573,6 +730,12 @@
 (peoplesEmacs/core/folding)
 (peoplesEmacs/core/completion)
 (peoplesEmacs/core/visuals)
+(pE/apps/org/config)
+;;(pE/org/babel)
+;;(pE/org/agenda)
+;;(pE/org/export)
+;;(pE/org/capture
+(pE/apps/mail)
 
 
 ;; hookedi hook
@@ -731,151 +894,13 @@
   (TeX-fold-mode 1))
 
 ;;; Org
-(defun pE/org/config ()
-  "Configs for org-mode"
-  (use-package org-bullets
-    :ensure t
-    :init
-    (setq org-bullets-bullet-list
-	  '("◉" "◎" "<img draggable="false" class="emoji" alt="⚫" src="https://s0.wp.com/wp-content/mu-plugins/wpcom-smileys/twemoji/2/svg/26ab.svg">" "○" "►" "◇"))
-    ;; (setq org-todo-keywords '((sequence "☛ TODO(t)" "|" "<img draggable="false" class="emoji" alt="✔" src="https://s0.wp.com/wp-content/mu-plugins/wpcom-smileys/twemoji/2/svg/2714.svg"> DONE(d)")
-    ;; 			      (sequence "⚑ WAITING(w)" "|")
-    ;; 			      (sequence "|" "✘ CANCELED(c)")))
-    :hook (org-mode . org-bullets-mode))
-  (use-package calfw
-    :ensure t)
-  (use-package calfw-org
-    :ensure t)
-  (use-package calfw-cal
-    :ensure t)
-  (calendar-set-date-style 'iso)
-  (setq org-src-fontify-natively t)
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((python . t)
-     (ipython . t)
-     (octave . t)
-     (haskell . t)
-     (maxima . t)
-     (fortran . t)))
-  (setq  org-confirm-babel-evaluate 'nil)
-  (defun my-org-mode-hook ()
-    (add-hook 'completion-at-point-functions
-	      'pcomplete-completions-at-point nil t))
-  (add-hook 'org-mode-hook #'my-org-mode-hook)
-  (setq org-log-done t)
-					;(org-babel-load-file
-					;"~/.emacs.d/personal/personal-org-mode-config.org")
-  
-  (setq org-enforce-todo-dependencies t)
-  (setq org-enforce-todo-checkbox-dependencies t)
-  (setq org-agenda-skip-scheduled-if-deadline-is-shown nil)
-  (setq org-agenda-skip-scheduled-if-done t)
-  (setq org-agenda-skip-deadline-if-done t)
-  (setq org-agenda-skip-deadline-prewarning-if-scheduled nil)
-  (setq org-agenda-skip-timestamp-if-deadline-is-shown nil)
-  (setq org-agenda-skip-timestamp-if-done t)
-  (global-set-key (kbd "C-c a") 'org-agenda)
-  (global-set-key (kbd "C-c A") (kbd "C-c a a")))
-(pE/org/config)
+(pE/apps/org/config)
 					;(pE/org/babel)
 					;(pE/org/agenda)
 					;(pE/org/export)
 					;(pE/org/capture
 
 ;;; Email
-(use-package notmuch
-  :ensure t
-  :config
-  (when (file-exists-p "~/.emacs.d/private/new_notmuch.el")
-    (load "~/.emacs.d/private/new_notmuch.el"))
-					; (org-babel-load-file "~/.emacs.d/private/notmuch.org")
-  (add-hook 'notmuch-hello-refresh-hook
-	    (lambda ()
-	      (if (and (eq (point) (point-min))
-		       (search-forward "Saved searches:" nil t))
-		  (progn
-		    (forward-line)
-		    (widget-forward 1))
-		(if (eq (widget-type (widget-at)) 'editable-field)
-		    (beginning-of-line)))))
-  ;; spamming
-  (define-key notmuch-show-mode-map "S"
-    (lambda ()
-      "toggle spam tag for message"
-      (interactive)
-      (if (member "spam" (notmuch-show-get-tags))
-	  (notmuch-show-tag (list "-spam" "+current"))
-	(notmuch-show-tag (list "+spam" "-current" "-unread")))))
-  (define-key notmuch-search-mode-map "S"
-    (lambda (beg end)
-      "toggle spam tag for message"
-      (interactive (notmuch-search-interactive-region))
-      (if (member "spam" (notmuch-show-get-tags))
-	  (notmuch-search-tag (list "-spam" "+current") beg end)
-	(notmuch-search-tag (list "+spam" "-current" "-unread") beg
-			    end))))
-  ;; arhiving
-  (define-key notmuch-show-mode-map "A"
-    (lambda ()
-      "toggle archive tag for message"
-      (interactive)
-      (if (member "current" (notmuch-show-get-tags))
-	  (notmuch-show-tag (list "-unread" "+current"))
-	(notmuch-show-tag (list "-current" "-unread")))))
-  (define-key notmuch-search-mode-map "A"
-    (lambda (beg end)
-      "toggle spam tag for message"
-      (interactive (notmuch-search-interactive-region))
-      (if (member "current" (notmuch-show-get-tags))
-	  (notmuch-search-tag (list "-unread" "+current") beg end)
-	(notmuch-search-tag (list "-current" "-unread") beg end))))
-  ;; for fsr
-  (define-key notmuch-show-mode-map "F"
-    (lambda ()
-      "toggle fsr tag for message"
-      (interactive)
-      (if (member "fsr" (notmuch-show-get-tags))
-	  (notmuch-show-tag (list "-unread" "+current"))
-	(notmuch-show-tag (list "-current" "-unread" "+fsr")))))
-  (define-key notmuch-search-mode-map "F"
-    (lambda (beg end)
-      "toggle fsr tag for message"
-      (interactive (notmuch-search-interactive-region))
-      (if (member "fsr" (notmuch-show-get-tags))
-	  (notmuch-search-tag (list "-unread" "+current") beg end)
-	(notmuch-search-tag (list "-current" "-unread" "+fsr") beg end))))
-
-  ;; for archiving
-  (define-key notmuch-show-mode-map "L"
-    (lambda ()
-      "toggle logs tag for message"
-      (interactive)
-      (if (member "logs" (notmuch-show-get-tags))
-	  (notmuch-show-tag (list "-unread" "+current"))
-	(notmuch-show-tag (list "-current" "-unread" "+logs")))))
-  (define-key notmuch-search-mode-map "L"
-    (lambda (beg end)
-      "toggle logs tag for message"
-      (interactive (notmuch-search-interactive-region))
-      (if (member "logs" (notmuch-show-get-tags))
-	  (notmuch-search-tag (list "-unread" "+current") beg end)
-	(notmuch-search-tag (list "-current" "-unread" "+logs") beg
-			    end))))
-  (setq sendmail-program "/usr/bin/msmtp")
-  (setq message-sendmail-extra-arguments '("--read-recipients"))
-  (setq message-send-mail-function 'message-send-mail-with-sendmail)
-					;     (setq message-sendmail-f-is-evil 't)
-  (setq mail-envelope-from 'header)
-  (setq message-sendmail-envelope-from 'header)
-  (setq mail-specify-envelope-from t)
-  (setq message-kill-buffer-on-exit t)
-  (add-hook 'message-setup-hook 'mml-secure-sign-pgpmime)
-
-  (eval-after-load 'Message
-    (lambda () (local-set-key (kbd "M-C-e") #'mml-secure-encrypt-pgpmime)))
-  (define-key notmuch-show-mode-map (kbd "C-c C-o") 'find-file-at-point))
-(use-package helm-notmuch
-  :ensure t)
+(pE/apps/mail)
 ;; (provide 'init)
 ;;; init.el ends here
