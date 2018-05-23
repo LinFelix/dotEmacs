@@ -1,6 +1,11 @@
+;;; peoplesEmacs-init.el --- Summary
+;; A configuration for Emacs (verison >=26 (because ... bleeding edge,
+;; preson)).  The name »peoples« is a play on my name.
+
 ;;; Commentary:
-;; This is like my 4th Emacs config. It's mainly inspired by
-;; github.com/exot and spacemacs. You can use it for whatever you want
+;; This is like my 4th Emacs config.  It's mainly inspired by
+;; github.com/exot and spacemacs.  You can use it for whatever you
+;; want
 
 
 ;;; License:
@@ -42,8 +47,7 @@
   (find-file "~/.emacs.d/init.el"))
 
 (defun peoplesEmacs/core/history ()
-  "We want to remember places we've been to, cos that's more
-   intuitive I guess"
+  "We want to remember places we've been to, 'cos that's more intuitive I guess."
   (savehist-mode t)
   (save-place-mode t)
   (use-package recentf
