@@ -722,8 +722,10 @@
   (use-package company-ansible
     :ensure t
     :after ansible
-    :hook (yaml-mode . (lambda () (add-to-list 'company-backends
-					  '(company-ansible :with company-yasnippet))))))
+    :hook (yaml-mode . (lambda ()
+			 (make-local-variable 'company-backends)
+			 (add-to-list 'company-backends
+				      '(company-ansible :with company-yasnippet))))))
 
 (defun pE/langs/devops ()
   (pE/langs/devops/vagrant)
@@ -773,9 +775,13 @@
 ;; hookedi hook
 (setq-local eldoc-documentation-function #'ggtags-eldoc-function)
 (add-hook 'prog-mode-hook #'(lambda ()
-			      (helm-gtags-mode)
-			      (semantic-mode)
-			      (auto-fill-mode)))
+			      (helm-gtags-mode t)
+			      (semantic-mode t)
+			      (auto-fill-mode t)
+			      (visual-line-mode t)))
+(add-hook 'text-mode-hook #'(lambda ()
+			      (auto-fill-mode t)
+			      (visual-line-mode t)))
 (global-set-key (kbd "<f9>") 'ispell-word)
 (global-set-key (kbd "<f12>") 'ispell-buffer)
 (global-set-key (kbd "C-<f12>") 'flyspell-buffer)
@@ -890,41 +896,68 @@
   :delight)
 
 
-(use-package latex-math-preview
-  :ensure t
-  :delight
-  :after (tex))
-
-(use-package tex
-  :ensure auctex
-  :mode ("\\.tex\\'" . TeX-mode)
-  :config
-  (auto-fill-mode)
+(defun peoplesEmacs/helper/latex-mode ()
+  "Configures LaTeX-mode."
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
-  (setq-default TeX-master t)
-					;  (latex-preview-pane-enable)
-  (setq-default TeX-electric-math '("$" . "$"))
-  (setq-default TeX-electric-sub-and-superscript t)
-  (setq-default LaTeX-electric-left-right-brace t)
-  ;; (add-hook 'LaTeX-mode-hook '(lambda ()
-  ;; 				(TeX-PDF-mode 1)
-  ;; 				(TeX-source-correlate-mode 1)
-  ;; 				(TeX-fold-mode 1)))
-
-  ;; PDF Viewer
-
-  (add-to-list 'TeX-view-program-selection
-               '(output-pdf "Evince"))
-
-					;:hook
+  (setq-default TeX-master nil)
+  (setq reftex-plug-into-AUCTeX t)
+  (setq TeX-PDF-mode t)
   (setq fill-column 80)
-  (auto-fill-mode t)
-  (autopair-mode -1)
-  (TeX-PDF-mode 1)
-  (TeX-source-correlate-mode 1)
-  (TeX-fold-mode 1))
+  (setq TeX-electric-math '("$" . "$"))
+  (setq LaTeX-electric-left-right-brace t)
+  (setq TeX-electric-sub-and-superscript t))
 
+(defun peoplesEmacs/helper/latex-hooks ()
+  "Defines peoples hooks for the LaTeX-mode."
+  (add-hook 'LaTeX-mode-hook 'visual-line)
+  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+  (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
+  (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode))
+
+(defun peoplesEmacs/lang/LaTeX ()
+
+  (use-package tex
+    :ensure auctex
+    :mode ("\\.tex\\'" . TeX-mode)
+    :config
+    (add-to-list 'TeX-view-program-selection
+		 '(output-pdf "Evince")))
+  (use-package latex-math-preview
+    :ensure t
+    :delight
+    :after (tex))
+  (use-package reftex
+    :commands (turn-on-reftex)
+    :ensure t
+    :delight
+    :after (tex)
+    :hook (latex-mode . turn-on-reftex))
+  (use-package company-auctex
+    :ensure t
+    :after (tex company))
+  (use-package company-reftex
+    :ensure t
+    :after (tex reftex company))
+  (use-package auctex-latexmk
+    :ensure t
+    :after (tex))
+  (use-package auctex-lua
+    :ensure t
+    :after (tex))
+  (use-package bibtex-utils
+    :ensure t
+    :after (tex))
+  (use-package company-bibtex
+    :ensure t
+    :after (bibtex tex company))
+  ;; think about helm-bitex, helm-bibtexkey, bibslurb, bibretrieve
+  ;; latex-extra, latex-unicode, latex-preety-symbols
+  ;; TODO play arount wtih cdlatex-mode, especially with yas together
+  (peoplesEmacs/helper/latex-mode)
+  (peoplesEmacs/helper/latex-hooks))
+
+(peoplesEmacs/lang/LaTeX)
 ;;; Org
 (pE/apps/org/config)
 					;(pE/org/babel)
