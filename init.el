@@ -219,11 +219,10 @@
 	  yas-wrap-around-region t)
     (setq-default yas-prompt-functions '(yas-completing-prompt))
     :bind ("C-<tab>" . company-yasnippet)
-    ;;:init
-    ;; (setq-default yas-snippet-dirs
-    ;; 		  ;;from AndreaCrotti/yasinppet-snippets and my own snippets
-    ;; 		  '("~/.emacs.d/snippets/yasnippet-snippets/snippets" ;;
-    ;; 		    "~/my_snippets")))
+    ("<print>" . yas-expand)
+    ;; :config
+    ;; (add-to-list yas-snippet-dirs
+    ;; 		 "~/snippets"))
     )
   (use-package yasnippet-snippets
     :after yasnippet
@@ -232,7 +231,8 @@
     :ensure t
     :after (yasnippet)
     :config (setq helm-yas-space-match-any-greedy t)
-    :bind ("<print> n" . helm-yas-complete))
+					;:bind ("<print> n" . helm-yas-complete)
+    )
   (use-package helm
     :delight helm-mode
     :ensure t
@@ -293,7 +293,7 @@
   ;; https://emacs.stackexchange.com/questions/5828/why-do-i-have-to-add-each-package-to-load-path-or-problem-with-require-packag
   ;; https://github.com/jwiegley/use-package/issues/275
   ;; This seems to be obsolete in version 27
-					;(package-initialize)
+  (package-initialize)
   (require 'package)
   (setq package-archives
         (quote
@@ -329,6 +329,8 @@
   (define-key isearch-mode-map "\C-f" 'isearch-repeat-forward)
   (global-set-key (kbd "C-s") 'save-buffer)
   (global-set-key (kbd "C-ö C-r") 'kill-buffer)
+  (global-set-key (kbd "M-n") 'forward-word)
+  (global-set-key (kbd "M-p") 'backward-word)
   (define-prefix-command '计画)
   (global-set-key (kbd "C-p") '计画)
   (define-key 计画 (kbd "f") 'helm-projectile-find-file)
@@ -450,7 +452,19 @@
   (use-package aggressive-indent
     :ensure t
     :delight
-    :hook ((prog-mode) . aggressive-indent-mode)))
+    :hook ((prog-mode) . aggressive-indent-mode)
+    :config
+    (add-to-list 'aggressive-indent-excluded-modes 'html-mode)
+    ;; The variable aggressive-indent-dont-indent-if lets you
+    ;; customize when you don't want indentation to happen. For
+    ;; instance, if you think it's annoying that lines jump around in
+    ;; c++-mode because you haven't typed the ; yet, you could add the
+    ;; following clause:
+    (add-to-list
+     'aggressive-indent-dont-indent-if
+     '(and (derived-mode-p 'c++-mode)
+	   (null (string-match "\\([;{}]\\|\\b\\(if\\|for\\|while\\)\\b\\)"
+			       (thing-at-point 'line)))))))
 
 (defun peoplesEmacs/core/visuals ()
   (use-package webkit-color-picker
@@ -898,28 +912,35 @@
 
 (defun peoplesEmacs/helper/latex-mode ()
   "Configures LaTeX-mode."
-  (setq TeX-auto-save t)
-  (setq TeX-parse-self t)
+  (setq-default TeX-auto-save t)
+  (setq-default TeX-parse-self t)
   (setq-default TeX-master nil)
-  (setq reftex-plug-into-AUCTeX t)
-  (setq TeX-PDF-mode t)
-  (setq fill-column 80)
-  (setq TeX-electric-math '("$" . "$"))
-  (setq LaTeX-electric-left-right-brace t)
-  (setq TeX-electric-sub-and-superscript t))
+  (setq-default reftex-plug-into-AUCTeX t)
+  (setq-default TeX-PDF-mode t)
+  (setq-default fill-column 80)
+  (setq-default TeX-electric-math '("$" . "$"))
+  (setq-default LaTeX-electric-left-right-brace t)
+  (setq-default TeX-electric-sub-and-superscript t))
 
 (defun peoplesEmacs/helper/latex-hooks ()
   "Defines peoples hooks for the LaTeX-mode."
-  (add-hook 'LaTeX-mode-hook 'visual-line)
+  (add-hook 'LaTeX-mode-hook 'visual-line-mode)
   (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
   (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
-  (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode))
+  (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+  (add-hook 'LaTeX-mode-hook #'(lambda ()
+				 (define-key yas-minor-mode-map [(tab)] nil)
+				 (define-key yas-minor-mode-map (kbd "TAB") nil)
+				 (define-key yas-minor-mode-map (kbd "<tab>")
+				   nil))))
+
 
 (defun peoplesEmacs/lang/LaTeX ()
 
   (use-package tex
     :ensure auctex
     :mode ("\\.tex\\'" . TeX-mode)
+    :bind ("C-p C-p" . TeX-command-run-all)
     :config
     (add-to-list 'TeX-view-program-selection
 		 '(output-pdf "Evince")))
@@ -951,6 +972,10 @@
   (use-package company-bibtex
     :ensure t
     :after (bibtex tex company))
+  (use-package cdlatex
+    :ensure t
+    :after (tex)
+    :hook ((latex-mode LaTeX-mode) . turn-on-cdlatex))
   ;; think about helm-bitex, helm-bibtexkey, bibslurb, bibretrieve
   ;; latex-extra, latex-unicode, latex-preety-symbols
   ;; TODO play arount wtih cdlatex-mode, especially with yas together
