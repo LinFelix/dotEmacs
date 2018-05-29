@@ -60,3 +60,6 @@ var/*
 eshell/*
 .sx/*
 flycheck_*
+/GPATH
+/GRTAGS
+/GTAGS
