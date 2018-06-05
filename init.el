@@ -1058,3 +1058,26 @@
 (pE/apps/mail)
 ;; (provide 'init)
 ;;; init.el ends here
+
+;; Smooth scrolling
+(setq mouse-wheel-scroll-amount '(2 ((shift) . 2))) ;;
+(setq mouse-wheel-follow-mouse 't) ;;
+(setq scroll-step 1) ;;
+(setq mouse-wheel-progressive-speed nil)
+(setq scroll-conservatively 10000)
+(setq scroll-margin 1
+      scroll-conservatively 0
+      scroll-up-aggressively 0.01
+      scroll-down-aggressively 0.01)
+(setq-default scroll-up-aggressively 0.01
+              scroll-down-aggressively 0.01)
+
+;; Minimap
+(global-set-key (kbd "<f7>") 'minimap-mode)
+(setq-default minimap-window-location 'right)
+(setq-default minimap-minimum-width 14)
+(setq-default minimap-recreate-window t)
+(setq-default minimap-width-fraction 0.10)
+(unless (display-graphic-p)                                                               
+  (minimap-mode -1))
+(add-hook 'minimap-sb-mode-hook (lambda () (setq mode-line-format nil)))
