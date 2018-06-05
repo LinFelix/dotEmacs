@@ -63,3 +63,5 @@ flycheck_*
 /GPATH
 /GRTAGS
 /GTAGS
+/bookmarks
+/org-clock-save.el
