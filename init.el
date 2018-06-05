@@ -55,6 +55,7 @@
     :delight
     :init (recentf-mode t)
     :config
+    (setq recentf-max-saved-items 500)
     (add-to-list 'recentf-exclude "\\~/.emacs.d/games/*\\")
     (add-to-list 'recentf-exclude "\\~/.emacs.d/elpa/*\\")
     (add-to-list 'recentf-exclude "\\\*Org Src *.org\[ * \]\*")
@@ -478,7 +479,8 @@
   (use-package highlight-indent-guides
     :ensure t
     :config (setq highlight-indent-guides-method 'character)
-    :hook (prog-mode . highlight-indent-guides-mode))
+					;:hook (prog-mode . highlight-indent-guides-mode)
+    )
   (use-package rainbow-identifiers
     :ensure t
     :hook (prog-mode . rainbow-identifiers-mode))
@@ -786,6 +788,7 @@
 (peoplesEmacs/core/folding)
 (peoplesEmacs/core/completion)
 (peoplesEmacs/core/visuals)
+(peoplesEmacs/core/navigationAndWindowing)
 (pE/langs/yaml)
 (pE/langs/ruby)
 (pE/langs/devops)
@@ -834,6 +837,44 @@
 (use-package move-text
   :ensure t)
 
+(use-package yasnippet-classic-snippets
+  :ensure t)
+
+(use-package vlf
+  :ensure t)
+
+(use-package w3
+  :ensure t)
+
+(use-package ada-mode
+  :ensure t)
+
+(use-package chess
+  :ensure t)
+
+(use-package cobol-mode
+  :ensure t)
+
+(use-package electric-spacing
+  :ensure t)
+
+(use-package company-math
+  :ensure t)
+
+(use-package js2-mode
+  :ensure t)
+
+(use-package json-mode
+  :ensure t)
+
+(use-package lex
+  :ensure t)
+
+(use-package bbdb
+  :ensure t)
+
+;; (use-package elscreen
+;;   :ensure t)
 
 ;;; Cool programs
 ;; translation
