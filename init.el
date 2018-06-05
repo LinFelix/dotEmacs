@@ -336,6 +336,11 @@
   (global-set-key (kbd "C-p") '计画)
   (define-key 计画 (kbd "f") 'helm-projectile-find-file)
   (define-key 计画 (kbd "F") 'helm-projectile-find-file-in-known-projects)
+  (define-key 计画 (kbd "i") 'org-clock-in)
+  (define-key 计画 (kbd "o") 'org-clock-out)
+  (define-key 计画 (kbd "q") 'org-clock-cancel)
+  (define-key 计画 (kbd "j") 'org-clock-jump-to-current-clock)
+  (define-key 计画 (kbd "C-t") 'org-clock-report)
   (use-package evil
     :ensure t
     :config
@@ -666,14 +671,14 @@
 
 (defun pE/apps/org/config ()
   "Configs for org-mode"
+  (global-set-key (kbd "C-ä .") 'org-time-stamp)
+  (global-set-key (kbd "C-ö M-b") 'org-switchb)
+  (global-set-key (kbd "C-c c") 'org-capture)
   (use-package org-bullets
     :ensure t
     :init
     (setq org-bullets-bullet-list
-	  '("◉" "◎" ;"<img draggable="false" class="emoji" alt="⚫"
-					;src="https://s0.wp.com/wp-content/mu-plugins/wpcom-smileys/twemoji/2/svg/26ab.svg">"
-	    "○" "►" "◇"
-	    ))
+	  '("◉" "◎" "○" "⚫" "✸" "★" "►" "▸" "◇" "◆"))
     ;; (setq org-todo-keywords '((sequence "☛ TODO(t)" "|" "<img draggable="false" class="emoji" alt="✔" src="https://s0.wp.com/wp-content/mu-plugins/wpcom-smileys/twemoji/2/svg/2714.svg"> DONE(d)")
     ;; 			      (sequence "⚑ WAITING(w)" "|")
     ;; 			      (sequence "|" "✘ CANCELED(c)")))
@@ -686,6 +691,7 @@
     :ensure t)
   (when (file-exists-p "~/.emacs.d/private/new_org.el")
     (load "~/.emacs.d/private/new_org.el"))
+  (setq org-agenda-start-on-weekday 1)
   (calendar-set-date-style 'iso)
   (setq org-src-fontify-natively t)
   (org-babel-do-load-languages
@@ -707,9 +713,15 @@
   
   (setq org-enforce-todo-dependencies t)
   (setq org-enforce-todo-checkbox-dependencies t)
-  (setq org-agenda-skip-scheduled-if-deadline-is-shown nil)
+					;(setq
+					;org-agenda-skip-scheduled-if-deadline-is-shown
+					;nil)
+  ;; https://orgmode.org/manual/Repeated-tasks.html
+  (setq org-agenda-skip-scheduled-if-deadline-is-shown 'repeated-after-deadline)
   (setq org-agenda-skip-scheduled-if-done t)
   (setq org-agenda-skip-deadline-if-done t)
+  (setq org-clock-persist 'history)
+  (org-clock-persistence-insinuate)
   (setq org-agenda-skip-deadline-prewarning-if-scheduled nil)
   (setq org-agenda-skip-timestamp-if-deadline-is-shown nil)
   (setq org-agenda-skip-timestamp-if-done t)
