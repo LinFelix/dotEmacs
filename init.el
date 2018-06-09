@@ -667,7 +667,8 @@
       (lambda () (local-set-key (kbd "M-C-e") #'mml-secure-encrypt-pgpmime)))
     (define-key notmuch-show-mode-map (kbd "C-c C-o") 'find-file-at-point))
   (use-package helm-notmuch
-    :ensure t))
+    :ensure t)
+  (require 'org-notmuch))
 
 (defun pE/apps/org/config ()
   "Configs for org-mode"
@@ -726,7 +727,8 @@
   (setq org-agenda-skip-timestamp-if-deadline-is-shown nil)
   (setq org-agenda-skip-timestamp-if-done t)
   (global-set-key (kbd "C-c a") 'org-agenda)
-  (global-set-key (kbd "C-c A") (kbd "C-c a a")))
+  (global-set-key (kbd "C-c A") (kbd "C-c a a"))
+  (require 'org-notmuch))
 
 (defun pE/langs/yaml ()
   (use-package yaml-mode
@@ -769,6 +771,80 @@
 (defun pE/langs/devops ()
   (pE/langs/devops/vagrant)
   (pE/langs/devops/ansible))
+
+
+(defun peoplesEmacs/helper/latex-mode ()
+  "Configures LaTeX-mode."
+  (setq-default TeX-auto-save t)
+  (setq-default TeX-parse-self t)
+  (setq-default TeX-master nil)
+  (setq-default reftex-plug-into-AUCTeX t)
+  (setq-default TeX-PDF-mode t)
+  (setq-default fill-column 80)
+  (setq-default TeX-electric-math '("$" . "$"))
+  (setq-default LaTeX-electric-left-right-brace t)
+  (setq-default TeX-electric-sub-and-superscript t))
+
+(defun peoplesEmacs/helper/latex-hooks ()
+  "Defines peoples hooks for the LaTeX-mode."
+  (add-hook 'LaTeX-mode-hook 'visual-line-mode)
+  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+  (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
+  (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+  (add-hook 'LaTeX-mode-hook #'(lambda ()
+				 (define-key yas-minor-mode-map [(tab)] nil)
+				 (define-key yas-minor-mode-map (kbd "TAB") nil)
+				 (define-key yas-minor-mode-map (kbd "<tab>")
+				   nil))))
+
+
+(defun peoplesEmacs/lang/LaTeX ()
+
+  (use-package tex
+    :ensure auctex
+    :mode ("\\.tex\\'" . TeX-mode)
+    :bind ("C-p C-p" . TeX-command-run-all)
+    :config
+    (add-to-list 'TeX-view-program-selection
+		 '(output-pdf "Evince")))
+  (use-package latex-math-preview
+    :ensure t
+    :delight
+    :after (tex))
+  (use-package reftex
+    :commands (turn-on-reftex)
+    :ensure t
+    :delight
+    :after (tex)
+    :hook (latex-mode . turn-on-reftex))
+  (use-package company-auctex
+    :ensure t
+    :after (tex company))
+  (use-package company-reftex
+    :ensure t
+    :after (tex reftex company))
+  (use-package auctex-latexmk
+    :ensure t
+    :after (tex))
+  (use-package auctex-lua
+    :ensure t
+    :after (tex))
+  (use-package bibtex-utils
+    :ensure t
+    :after (tex))
+  (use-package company-bibtex
+    :ensure t
+    :after (bibtex tex company))
+  (use-package cdlatex
+    :ensure t
+    :after (tex)
+    :hook ((latex-mode LaTeX-mode) . turn-on-cdlatex))
+  ;; think about helm-bitex, helm-bibtexkey, bibslurb, bibretrieve
+  ;; latex-extra, latex-unicode, latex-preety-symbols
+  ;; TODO play arount wtih cdlatex-mode, especially with yas together
+  (peoplesEmacs/helper/latex-mode)
+  (peoplesEmacs/helper/latex-hooks))
+
 ;;;  #################################################################
 ;;;                                                                  #
 ;;;  Config:                                                         #
@@ -801,14 +877,20 @@
 (peoplesEmacs/core/completion)
 (peoplesEmacs/core/visuals)
 (peoplesEmacs/core/navigationAndWindowing)
+;;; Langs
 (pE/langs/yaml)
 (pE/langs/ruby)
 (pE/langs/devops)
+(peoplesEmacs/lang/LaTeX)
+(peoplesEmacs/lang/haskell)
+;;; Org
 (pE/apps/org/config)
-;;(pE/org/babel)
-;;(pE/org/agenda)
-;;(pE/org/export)
-;;(pE/org/capture
+					;(pE/org/babel)
+					;(pE/org/agenda)
+					;(pE/org/export)
+					;(pE/org/capture
+
+;;; Email
 (pE/apps/mail)
 
 
@@ -973,91 +1055,6 @@
   :ensure t
   :delight)
 
-
-(defun peoplesEmacs/helper/latex-mode ()
-  "Configures LaTeX-mode."
-  (setq-default TeX-auto-save t)
-  (setq-default TeX-parse-self t)
-  (setq-default TeX-master nil)
-  (setq-default reftex-plug-into-AUCTeX t)
-  (setq-default TeX-PDF-mode t)
-  (setq-default fill-column 80)
-  (setq-default TeX-electric-math '("$" . "$"))
-  (setq-default LaTeX-electric-left-right-brace t)
-  (setq-default TeX-electric-sub-and-superscript t))
-
-(defun peoplesEmacs/helper/latex-hooks ()
-  "Defines peoples hooks for the LaTeX-mode."
-  (add-hook 'LaTeX-mode-hook 'visual-line-mode)
-  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-  (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
-  (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
-  (add-hook 'LaTeX-mode-hook #'(lambda ()
-				 (define-key yas-minor-mode-map [(tab)] nil)
-				 (define-key yas-minor-mode-map (kbd "TAB") nil)
-				 (define-key yas-minor-mode-map (kbd "<tab>")
-				   nil))))
-
-
-(defun peoplesEmacs/lang/LaTeX ()
-
-  (use-package tex
-    :ensure auctex
-    :mode ("\\.tex\\'" . TeX-mode)
-    :bind ("C-p C-p" . TeX-command-run-all)
-    :config
-    (add-to-list 'TeX-view-program-selection
-		 '(output-pdf "Evince")))
-  (use-package latex-math-preview
-    :ensure t
-    :delight
-    :after (tex))
-  (use-package reftex
-    :commands (turn-on-reftex)
-    :ensure t
-    :delight
-    :after (tex)
-    :hook (latex-mode . turn-on-reftex))
-  (use-package company-auctex
-    :ensure t
-    :after (tex company))
-  (use-package company-reftex
-    :ensure t
-    :after (tex reftex company))
-  (use-package auctex-latexmk
-    :ensure t
-    :after (tex))
-  (use-package auctex-lua
-    :ensure t
-    :after (tex))
-  (use-package bibtex-utils
-    :ensure t
-    :after (tex))
-  (use-package company-bibtex
-    :ensure t
-    :after (bibtex tex company))
-  (use-package cdlatex
-    :ensure t
-    :after (tex)
-    :hook ((latex-mode LaTeX-mode) . turn-on-cdlatex))
-  ;; think about helm-bitex, helm-bibtexkey, bibslurb, bibretrieve
-  ;; latex-extra, latex-unicode, latex-preety-symbols
-  ;; TODO play arount wtih cdlatex-mode, especially with yas together
-  (peoplesEmacs/helper/latex-mode)
-  (peoplesEmacs/helper/latex-hooks))
-
-(peoplesEmacs/lang/LaTeX)
-;;; Org
-(pE/apps/org/config)
-					;(pE/org/babel)
-					;(pE/org/agenda)
-					;(pE/org/export)
-					;(pE/org/capture
-
-;;; Email
-(pE/apps/mail)
-;; (provide 'init)
-;;; init.el ends here
 
 ;; Smooth scrolling
 (setq mouse-wheel-scroll-amount '(2 ((shift) . 2))) ;;
