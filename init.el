@@ -845,6 +845,51 @@
   (peoplesEmacs/helper/latex-mode)
   (peoplesEmacs/helper/latex-hooks))
 
+
+(defun peoplesEmacs/lang/haskell ()
+  (use-package intero
+    :ensure t
+    :hook (haskell-mode . intero-mode))
+  (use-package shm
+    :ensure t
+    :hook (haskell-mode . structured-haskell-mode))
+  (use-package company-cabal
+    :ensure t)
+  (use-package hasky-stack
+    :ensure t)
+  (use-package hasky-extensions
+    :ensure t
+    :after (hasky-stack))
+  (use-package ghc
+    :ensure t
+    :hook (haskell-mode . (lambda () (ghc-init))))
+  ;; (use-package company-ghc
+  ;;   :ensure t
+  ;;   :after (ghc company-mode))
+  ;; (use-package company-ghci
+  ;;   :ensure t
+  ;;   :after (ghc company-mode))
+  (use-package flymake-hlint
+    :ensure t
+    :hook (haskell-mode . flymake-hlint-load))
+  (use-package flycheck-haskell
+    :ensure t
+    :hook (flycheck-mode . flycheck-haskell-setup))
+  (use-package hindent
+    :ensure t
+    :hook (haskell-mode . hindent-mode))
+  (use-package haskell-mode
+    :ensure t
+    :config
+    (custom-set-variables
+     '(haskell-stylish-on-save t))
+    :hook (haskell-mode . (lambda () (haskell-tab-indent-mode -1)))
+					;(add-hook 'haskell-mode-hook 'haskell-auto-insert-module-template)
+    )
+  (use-package flycheck-stack
+    :ensure t
+    :after (flycheck haskell-mode)))
+
 ;;;  #################################################################
 ;;;                                                                  #
 ;;;  Config:                                                         #
