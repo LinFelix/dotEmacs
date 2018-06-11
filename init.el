@@ -852,10 +852,23 @@
     :mode "\\.clj\\'")  ; TODO include \\.cljs\\' in the for clojurescript)
   (use-package cider
     :ensure t
-    :hook ((clj-mode clojure-mode) . cider-mode))
+    :hook ((clj-mode clojure-mode) . cider-mode)
+    :config
+    (setq cider-font-lock-dynamically '(macro core function var))
+    (setq cider-font-lock-reader-conditionals nil)
+    (add-hook 'cider-mode-hook #'eldoc-mode)
+    (setq cider-eldoc-display-for-symbol-at-point t)
+    (setq cider-overlays-use-font-lock t)
+    ;; (setq cider-use-overlays nil)
+    (setq cider-dynamic-indentation t))
   (use-package clj-refactor
     :ensure t
-    :hook (clj-mode . clj-refactor-mode)))
+    :hook (clj-mode . clj-refactor-mode))
+  (use-package helm-cider
+    :ensure t)
+  (use-package inf-clojure
+    :ensure t
+    :hook ((clj-mode clojure-mode) . inf-clojure-minor-mode)))
 
 
 (defun peoplesEmacs/lang/haskell ()
