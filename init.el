@@ -460,7 +460,7 @@
   (use-package paredit
     :delight
     :ensure t
-    :hook ((lisp-mode eval-expression-minibuffer-setup lisp-mode lisp-inetraction emacs-lisp-mode ielm-mode clojure-mode clojurec-mode clojurescript-mode common-lisp-mode slime-mode scheme-mode) . 'enable-paredit-mode))
+    :hook ((lisp-mode eval-expression-minibuffer-setup lisp-mode lisp-inetraction emacs-lisp-mode ielm-mode clj-mode clojure-mode clojurec-mode clojurescript-mode common-lisp-mode slime-mode scheme-mode) . 'enable-paredit-mode))
   (use-package aggressive-indent
     :ensure t
     :delight
@@ -846,6 +846,18 @@
   (peoplesEmacs/helper/latex-hooks))
 
 
+(defun peoplesEmacs/lang/clojure ()
+  (use-package clojure-mode
+    :ensure t
+    :mode "\\.clj\\'")  ; TODO include \\.cljs\\' in the for clojurescript)
+  (use-package cider
+    :ensure t
+    :hook ((clj-mode clojure-mode) . cider-mode))
+  (use-package clj-refactor
+    :ensure t
+    :hook (clj-mode . clj-refactor-mode)))
+
+
 (defun peoplesEmacs/lang/haskell ()
   (use-package intero
     :ensure t
@@ -888,7 +900,9 @@
     )
   (use-package flycheck-stack
     :ensure t
-    :after (flycheck haskell-mode)))
+    :after (flycheck haskell-mode))
+  (use-package helm-hoogle
+    :ensure t))
 
 ;;;  #################################################################
 ;;;                                                                  #
@@ -922,12 +936,15 @@
 (peoplesEmacs/core/completion)
 (peoplesEmacs/core/visuals)
 (peoplesEmacs/core/navigationAndWindowing)
+
 ;;; Langs
 (pE/langs/yaml)
 (pE/langs/ruby)
 (pE/langs/devops)
 (peoplesEmacs/lang/LaTeX)
 (peoplesEmacs/lang/haskell)
+(peoplesEmacs/lang/clojure)
+
 ;;; Org
 (pE/apps/org/config)
 					;(pE/org/babel)
