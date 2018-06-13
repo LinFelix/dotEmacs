@@ -671,7 +671,8 @@
   (require 'org-notmuch))
 
 (defun pE/apps/org/config ()
-  "Configs for org-mode"
+  "Configs for Org mode."
+  (setq-default indent-tabs-mode nil)
   (global-set-key (kbd "C-ä .") 'org-time-stamp)
   (global-set-key (kbd "C-ö M-b") 'org-switchb)
   (global-set-key (kbd "C-c c") 'org-capture)
@@ -729,6 +730,23 @@
   (global-set-key (kbd "C-c a") 'org-agenda)
   (global-set-key (kbd "C-c A") (kbd "C-c a a"))
   (require 'org-notmuch))
+
+(defun pE/org/babel ()
+  (setq org-src-fontify-natively t)
+  ;; (use-package ob-clojure
+  ;;   :ensure t
+  ;;   :config (setq org-babel-clojure-backend 'cider))
+  (setq org-babel-clojure-backend 'cider)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)
+     (ipython . t)
+     (octave . t)
+     (haskell . t)
+     (maxima . t)
+     (fortran . t)
+     (clojure . t)))
+  (setq  org-confirm-babel-evaluate 'nil))
 
 (defun pE/langs/yaml ()
   (use-package yaml-mode
@@ -960,7 +978,7 @@
 
 ;;; Org
 (pE/apps/org/config)
-					;(pE/org/babel)
+(pE/org/babel)
 					;(pE/org/agenda)
 					;(pE/org/export)
 					;(pE/org/capture
